@@ -5,3 +5,9 @@ build/
 *.raw
 *.bin
 a.out
+cat > ~/riscv-canny-edge/.gitignore << 'EOF'
+build/
+*.o
+*.d
+*.raw
+EOF
