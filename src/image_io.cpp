@@ -3,7 +3,8 @@
 #include <cstdlib>
 
 uint8_t* alloc_image(int w, int h) {
-    void* ptr = aligned_alloc(64, (size_t)w * h);
+    size_t sz = ((size_t)w * h + 63) & ~63;
+    void* ptr = aligned_alloc(64, sz);
     if (!ptr) {
         fprintf(stderr, "alloc_image: out of memory\n");
         exit(1);
@@ -14,6 +15,7 @@ uint8_t* alloc_image(int w, int h) {
 uint8_t* load_raw(const char* path, int w, int h) {
     FILE* f = fopen(path, "rb");
     if (!f) {
+        perror("load_raw: fopen failed");
         fprintf(stderr, "load_raw: cannot open %s\n", path);
         exit(1);
     }
@@ -30,6 +32,7 @@ uint8_t* load_raw(const char* path, int w, int h) {
 void save_raw(const char* path, const uint8_t* buf, int w, int h) {
     FILE* f = fopen(path, "wb");
     if (!f) {
+        perror("save_raw: fopen failed");
         fprintf(stderr, "save_raw: cannot open %s\n", path);
         exit(1);
     }
