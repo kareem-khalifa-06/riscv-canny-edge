@@ -115,3 +115,4 @@ Gaussian and Sobel because of boundary checks. This data directly justifies
 why we need manual RVV intrinsics — the compiler cannot do it automatically.
 This is Amdahl's law in practice: optimize where the compiler cannot help.
 
+
