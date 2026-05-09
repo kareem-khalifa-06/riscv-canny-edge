@@ -146,23 +146,25 @@ Generates 8 test patterns:
 ---
 
 ## Repo Structure
+```
 riscv-canny-edge/
-├── src/                  ← scalar C++ pipeline
-│   ├── image_io.cpp/h    ← load/save raw images
-│   ├── gaussian.cpp/h    ← Gaussian blur (5×5, templated)
-│   ├── sobel.cpp/h       ← Sobel gradient (Gx, Gy)
-│   ├── magnitude.cpp/h   ← L1 and L2 magnitude
-│   ├── direction.cpp/h   ← gradient direction
-│   └── main.cpp          ← pipeline entry point with timing
-├── rvv/                  ← RVV intrinsic optimizations
-├── tests/                ← GoogleTest unit tests
-├── tools/                ← test image generator
-├── docs/                 ← sample images, reports
+├── src/
+│   ├── image_io.cpp/h
+│   ├── gaussian.cpp/h
+│   ├── sobel.cpp/h
+│   ├── magnitude.cpp/h
+│   ├── direction.cpp/h
+│   └── main.cpp
+├── rvv/
+├── tests/
+├── tools/
+├── docs/
 ├── Makefile
 ├── README.md
 ├── AI_USAGE_LOG.md
 └── .gitignore
----
+```
+
 
 ## Optimization Results
 
