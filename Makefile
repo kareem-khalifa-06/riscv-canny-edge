@@ -1,6 +1,7 @@
 # Compilers
 HOST_CXX := g++
-RV_CXX   := riscv64-unknown-elf-g++
+RV_CXX   := riscv64-unknown-linux-gnu-g++
+
 
 # Flags
 HOST_FLAGS := -O2 -std=c++17 -Wall -Wextra
@@ -23,7 +24,7 @@ MAIN_SRC    := $(SRC_DIR)/main.cpp
 TEST_SRCS   := $(wildcard $(TEST_DIR)/*.cpp)
 RVV_SRCS    := $(wildcard $(RVV_DIR)/*.cpp)
 
-.PHONY: all test canny_rv run clean qemu_test run_qemu_test
+.PHONY: all test canny_rv run clean qemu_test run_qemu_test host run_host
 
 all: canny_rv
 
@@ -48,6 +49,13 @@ run_qemu_test: qemu_test
 	qemu-riscv64 -cpu rv64,v=true,vlen=128 $(RV_BUILD)/qemu_test
 	qemu-riscv64 -cpu rv64,v=true,vlen=256 $(RV_BUILD)/qemu_test
 	qemu-riscv64 -cpu rv64,v=true,vlen=512 $(RV_BUILD)/qemu_test
+
+host: $(LIB_SRCS) $(MAIN_SRC)
+	@mkdir -p $(HOST_BUILD)
+	$(HOST_CXX) $(HOST_FLAGS) $^ -o $(HOST_BUILD)/canny_host
+
+run_host: host
+	./$(HOST_BUILD)/canny_host $(W) $(H) $(IMG) $(PREFIX)
 
 clean:
 	rm -rf build
