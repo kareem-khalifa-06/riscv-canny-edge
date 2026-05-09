@@ -15,9 +15,8 @@ HOST_BUILD := build/host
 RV_BUILD   := build/rv
 
 # GoogleTest
-GTEST_INC := -I$(HOME)/googletest-install/include
-GTEST_LIB := -L$(HOME)/googletest-install/lib -lgtest -lgtest_main -lpthread
-
+GTEST_INC := -I$(HOME)/.local/include
+GTEST_LIB := -L$(HOME)/.local/lib -lgtest -lgtest_main -lpthread
 # Sources
 LIB_SRCS    := $(SRC_DIR)/image_io.cpp $(SRC_DIR)/gaussian.cpp $(SRC_DIR)/sobel.cpp $(SRC_DIR)/magnitude.cpp $(SRC_DIR)/direction.cpp
 MAIN_SRC    := $(SRC_DIR)/main.cpp
