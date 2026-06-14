@@ -170,13 +170,13 @@ riscv-canny-edge/
 
 | Stage | -O0 | -O2 | -O3 | -Ofast |
 |-------|-----|-----|-----|--------|
-| Gaussian Blur | 28.7ms | 211.6ms | 3.6ms | 5.8ms |
-| Sobel Gradient | 50.5ms | 4.5ms | 0.9ms | 0.8ms |
-| Magnitude L1 | 2.2ms | 3.7ms | 7.4ms | 6.4ms |
-| Magnitude L2 | 32.8ms | 19.0ms | 20.5ms | 18.4ms |
-| Direction | 1.4ms | 0.8ms | 5.5ms | 4.6ms |
-| **Total** | **115.7ms** | **239.6ms** | **37.9ms** | **36.0ms** |
-| Binary Size | 19KB | 15KB | 19KB | 19KB |
+| Gaussian Blur | 13.627ms | 4.715ms | 1.654ms | 1.670ms |
+| Sobel Gradient | 6.063ms | 2.591ms | 0.538ms | 0.516ms |
+| Magnitude L1 | 0.624ms | 0.45ms | 0.428ms | 0.434ms |
+| Magnitude L2 | 7.613ms | 8.346ms | 7.952ms | 2.261ms |
+| Direction | 1.02ms | 0.452ms | 0.426ms | 2.052ms |
+| **Total** | **28.947ms** | **16.555ms** | **10.998ms** | **6.933ms** |
+| Binary Size | 533KB | 530KB | 533KB | 532KB |
 
 ---
 
