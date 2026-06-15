@@ -37,3 +37,7 @@ void gaussian_5x5(const PixelT* src, PixelT* dst, int w, int h) {
 inline void gaussian_5x5(const uint8_t* src, uint8_t* dst, int w, int h) {
     gaussian_5x5<uint8_t, int32_t, int16_t>(src, dst, w, h);
 }
+
+#ifdef __riscv_v
+extern "C" void gaussian_5x5_rvv(const uint8_t* src, uint8_t* dst, int w, int h);
+#endif
