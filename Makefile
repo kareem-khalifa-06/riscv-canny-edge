@@ -41,10 +41,11 @@ MAIN_SRC  := $(SRC_DIR)/main.cpp
 RVV_SRCS  := $(wildcard $(RVV_DIR)/*.cpp)
 
 # Host-side GoogleTest files — EXCLUDES RVV and QEMU test files because those
-# call magnitude_l1_rvv() which is undefined on x86 (only exists under __riscv_v)
+# call RVV-only functions which are undefined on x86 (only exist under __riscv_v)
 HOST_TEST_SRCS := $(TEST_DIR)/test_gaussian.cpp \
                   $(TEST_DIR)/test_sobel.cpp \
-                  $(TEST_DIR)/test_magnitude.cpp
+                  $(TEST_DIR)/test_magnitude.cpp \
+                  $(TEST_DIR)/test_direction.cpp
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Runtime parameters (override on command line: make run VLEN=512 W=512 H=512)
@@ -62,6 +63,8 @@ PREFIX ?= output
         host run_host \
         qemu_test run_qemu_test \
         qemu_rvv_test run_rvv_tests \
+        qemu_sobel_rvv_test run_sobel_rvv_tests \
+        run_all_rvv_tests \
         vlen_sweep
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -128,6 +131,24 @@ run_rvv_tests: qemu_rvv_test
 		echo "=== VLEN=$$VLEN ==="; \
 		qemu-riscv64 -cpu rv64,v=true,vlen=$$VLEN $(RV_BUILD)/qemu_rvv_test; \
 	done
+
+# ─────────────────────────────────────────────────────────────────────────────
+# QEMU-side Sobel RVV equivalence test (scalar vs RVV)
+# ─────────────────────────────────────────────────────────────────────────────
+qemu_sobel_rvv_test: $(LIB_SRCS) $(RVV_SRCS) $(TEST_DIR)/Test_sobel_rvv_qemu.cpp
+	@mkdir -p $(RV_BUILD)
+	$(RV_CXX) $(RV_FLAGS) $^ -o $(RV_BUILD)/qemu_sobel_rvv_test
+
+run_sobel_rvv_tests: qemu_sobel_rvv_test
+	@for VLEN in 128 256 512; do \
+		echo "=== VLEN=$$VLEN ==="; \
+		qemu-riscv64 -cpu rv64,v=true,vlen=$$VLEN $(RV_BUILD)/qemu_sobel_rvv_test; \
+	done
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Run ALL RVV equivalence tests (magnitude + sobel)
+# ─────────────────────────────────────────────────────────────────────────────
+run_all_rvv_tests: run_rvv_tests run_sobel_rvv_tests
 
 # ─────────────────────────────────────────────────────────────────────────────
 # VLEN sweep — run at 128/256/512 and diff outputs to verify VLA correctness
