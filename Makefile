@@ -25,7 +25,9 @@ LIB_SRCS    := $(SRC_DIR)/image_io.cpp \
                $(SRC_DIR)/gaussian.cpp \
                $(SRC_DIR)/sobel.cpp \
                $(SRC_DIR)/magnitude.cpp \
-               $(SRC_DIR)/direction.cpp
+               $(SRC_DIR)/direction.cpp \
+               $(SRC_DIR)/nms.cpp \
+               $(SRC_DIR)/threshold.cpp
 
 MAIN_SRC    := $(SRC_DIR)/main.cpp
 RVV_SRCS    := $(wildcard $(RVV_DIR)/*.cpp)
@@ -38,7 +40,9 @@ RVV_SRCS    := $(wildcard $(RVV_DIR)/*.cpp)
 HOST_TEST_SRCS := $(TEST_DIR)/test_gaussian.cpp \
                    $(TEST_DIR)/test_sobel.cpp \
                    $(TEST_DIR)/test_magnitude.cpp \
-                   $(TEST_DIR)/test_direction.cpp
+                   $(TEST_DIR)/test_direction.cpp \
+                   $(TEST_DIR)/test_nms.cpp \
+                   $(TEST_DIR)/test_threshold.cpp
 
 # ---------------------------------------------------------------------------
 # Runtime params
@@ -48,11 +52,13 @@ W     ?= 256
 H     ?= 256
 IMG   ?= input.raw
 PREFIX?= output
+LOW   ?= 20
+HIGH  ?= 50
 
 # ---------------------------------------------------------------------------
-# Phony targets (single line — no backslash continuation issues)
+# Phony targets
 # ---------------------------------------------------------------------------
-.PHONY: all test canny_rv run clean host run_host qemu_test run_qemu_test qemu_rvv_test run_rvv_tests qemu_sobel_rvv_test run_sobel_rvv_tests qemu_gaussian_rvv_test run_gaussian_rvv_tests run_all_rvv_tests vlen_sweep lmul_sweep profile help
+.PHONY: all test canny_rv run clean host run_host qemu_test run_qemu_test qemu_rvv_test run_rvv_tests qemu_sobel_rvv_test run_sobel_rvv_tests qemu_gaussian_rvv_test run_gaussian_rvv_tests run_all_rvv_tests vlen_sweep lmul_sweep profile help bonus_test
 
 # ---------------------------------------------------------------------------
 # Default
@@ -80,6 +86,9 @@ canny_rv: $(LIB_SRCS) $(MAIN_SRC) $(RVV_SRCS)
 run: canny_rv
 	qemu-riscv64 -cpu rv64,v=true,vlen=$(VLEN) $(RV_BUILD)/canny_rv $(W) $(H) $(IMG) $(PREFIX)
 
+run_bonus: canny_rv
+	qemu-riscv64 -cpu rv64,v=true,vlen=$(VLEN) $(RV_BUILD)/canny_rv $(W) $(H) $(IMG) $(PREFIX) $(LOW) $(HIGH)
+
 # ---------------------------------------------------------------------------
 # Native host binary (no QEMU, no RVV)
 # ---------------------------------------------------------------------------
@@ -89,6 +98,9 @@ host: $(LIB_SRCS) $(MAIN_SRC)
 
 run_host: host
 	./$(HOST_BUILD)/canny_host $(W) $(H) $(IMG) $(PREFIX)
+
+run_host_bonus: host
+	./$(HOST_BUILD)/canny_host $(W) $(H) $(IMG) $(PREFIX) $(LOW) $(HIGH)
 
 # ---------------------------------------------------------------------------
 # QEMU-side scalar equivalence test
@@ -159,6 +171,7 @@ help:
 	@echo "  make test                  Host-side GoogleTest (x86)"
 	@echo "  make canny_rv              Cross-compile for RISC-V"
 	@echo "  make run                   Run on QEMU (VLEN=$(VLEN))"
+	@echo "  make run_bonus             Run with custom thresholds LOW= HIGH="
 	@echo "  make host                  Build native x86 binary"
 	@echo "  make run_host              Run native x86 binary"
 	@echo "  make run_qemu_test         Scalar equivalence on QEMU"
@@ -170,11 +183,16 @@ help:
 	@echo "  make lmul_sweep            LMUL=1 vs LMUL=2 comparison"
 	@echo "  make profile               Collect profiling data (JSON)"
 	@echo "  make clean                 Remove build artifacts"
+	@echo ""
+	@echo "Runtime variables:"
+	@echo "  VLEN=256           Vector length (128/256/512)"
+	@echo "  W=256 H=256        Image dimensions"
+	@echo "  IMG=path.raw       Input image"
+	@echo "  PREFIX=out         Output prefix"
+	@echo "  LOW=20 HIGH=50     Threshold values (for run_bonus)"
 
 # ---------------------------------------------------------------------------
 # Clean
 # ---------------------------------------------------------------------------
 clean:
 	rm -rf build output_vlen*.raw prof_*.raw
-	@echo "  IMG=path.raw       Input image  (default: input.raw)"
-	@echo "  PREFIX=out         Output prefix"
