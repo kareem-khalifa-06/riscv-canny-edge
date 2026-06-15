@@ -1,4 +1,4 @@
-# =============================================================================
+ # =============================================================================
 # RISC-V Canny Edge Detection — Makefile
 # =============================================================================
 
@@ -58,7 +58,7 @@ HIGH  ?= 50
 # ---------------------------------------------------------------------------
 # Phony targets
 # ---------------------------------------------------------------------------
-.PHONY: all test canny_rv run clean host run_host qemu_test run_qemu_test qemu_rvv_test run_rvv_tests qemu_sobel_rvv_test run_sobel_rvv_tests qemu_gaussian_rvv_test run_gaussian_rvv_tests run_all_rvv_tests vlen_sweep lmul_sweep profile help bonus_test
+.PHONY: all test canny_rv run clean host run_host qemu_test run_qemu_test qemu_rvv_test run_rvv_tests qemu_sobel_rvv_test run_sobel_rvv_tests qemu_gaussian_rvv_test run_gaussian_rvv_tests qemu_direction_rvv_test run_direction_rvv_tests run_all_rvv_tests vlen_sweep lmul_sweep profile help bonus_test
 
 # ---------------------------------------------------------------------------
 # Default
@@ -147,7 +147,17 @@ run_sobel_rvv_tests: qemu_sobel_rvv_test
 		qemu-riscv64 -cpu rv64,v=true,vlen=$$v $(RV_BUILD)/qemu_sobel_rvv_test; \
 	done
 
-run_all_rvv_tests: run_gaussian_rvv_tests run_rvv_tests run_sobel_rvv_tests
+qemu_direction_rvv_test: $(LIB_SRCS) $(RVV_SRCS) $(TEST_DIR)/Test_direction_rvv_qemu.cpp
+	@mkdir -p $(RV_BUILD)
+	$(RV_CXX) $(RV_FLAGS) $^ -o $(RV_BUILD)/qemu_direction_rvv_test
+
+run_direction_rvv_tests: qemu_direction_rvv_test
+	@for v in 128 256 512; do \
+		echo "=== VLEN=$$v ==="; \
+		qemu-riscv64 -cpu rv64,v=true,vlen=$$v $(RV_BUILD)/qemu_direction_rvv_test; \
+	done
+
+run_all_rvv_tests: run_gaussian_rvv_tests run_rvv_tests run_sobel_rvv_tests run_direction_rvv_tests
 
 # ---------------------------------------------------------------------------
 # Analysis tools
@@ -178,6 +188,7 @@ help:
 	@echo "  make run_gaussian_rvv_tests  Gaussian RVV on QEMU"
 	@echo "  make run_rvv_tests         Magnitude RVV on QEMU"
 	@echo "  make run_sobel_rvv_tests   Sobel RVV on QEMU"
+	@echo "  make run_direction_rvv_tests Direction RVV on QEMU"
 	@echo "  make run_all_rvv_tests     All RVV tests on QEMU"
 	@echo "  make vlen_sweep            VLEN=128/256/512 sweep"
 	@echo "  make lmul_sweep            LMUL=1 vs LMUL=2 comparison"
