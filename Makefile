@@ -1,105 +1,88 @@
-# ─────────────────────────────────────────────────────────────────────────────
-# Compilers
-# ─────────────────────────────────────────────────────────────────────────────
-HOST_CXX := g++
-RV_CXX   := riscv64-unknown-linux-gnu-g++
+# =============================================================================
+# RISC-V Canny Edge Detection — Makefile
+# =============================================================================
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Flags
-# ─────────────────────────────────────────────────────────────────────────────
-HOST_FLAGS := -O2 -std=c++17 -Wall -Wextra
-RV_FLAGS   := -march=rv64gcv -O2 -std=c++17 -Wall -Wextra -static
+HOST_CXX    := g++
+RV_CXX      := riscv64-unknown-linux-gnu-g++
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Directories
-# ─────────────────────────────────────────────────────────────────────────────
-SRC_DIR    := src
-RVV_DIR    := rvv
-TEST_DIR   := tests
-HOST_BUILD := build/host
-RV_BUILD   := build/rv
+HOST_FLAGS  := -O2 -std=c++17 -Wall -Wextra
+RV_FLAGS    := -march=rv64gcv -O2 -std=c++17 -Wall -Wextra -static
 
-# ─────────────────────────────────────────────────────────────────────────────
-# GoogleTest (host-side only)
-# ─────────────────────────────────────────────────────────────────────────────
-GTEST_INC := -I$(HOME)/.local/include
-GTEST_LIB := -L$(HOME)/.local/lib -lgtest -lgtest_main -lpthread
+SRC_DIR     := src
+RVV_DIR     := rvv
+TEST_DIR    := tests
+TOOLS_DIR   := tools
+HOST_BUILD  := build/host
+RV_BUILD    := build/rv
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Sources
-# ─────────────────────────────────────────────────────────────────────────────
-# Scalar pipeline (shared by host and RISC-V targets)
-LIB_SRCS := $(SRC_DIR)/image_io.cpp \
-             $(SRC_DIR)/gaussian.cpp \
-             $(SRC_DIR)/sobel.cpp \
-             $(SRC_DIR)/magnitude.cpp \
-             $(SRC_DIR)/direction.cpp
+GTEST_INC   := -I$(HOME)/.local/include
+GTEST_LIB   := -L$(HOME)/.local/lib -lgtest -lgtest_main -lpthread
 
-MAIN_SRC  := $(SRC_DIR)/main.cpp
+# ---------------------------------------------------------------------------
+# Source files
+# ---------------------------------------------------------------------------
+LIB_SRCS    := $(SRC_DIR)/image_io.cpp \
+               $(SRC_DIR)/gaussian.cpp \
+               $(SRC_DIR)/sobel.cpp \
+               $(SRC_DIR)/magnitude.cpp \
+               $(SRC_DIR)/direction.cpp
 
-# RVV intrinsic implementations (cross-compiled only — guarded by #ifdef __riscv_v)
-RVV_SRCS  := $(wildcard $(RVV_DIR)/*.cpp)
+MAIN_SRC    := $(SRC_DIR)/main.cpp
+RVV_SRCS    := $(wildcard $(RVV_DIR)/*.cpp)
 
-# Host-side GoogleTest files — EXCLUDES RVV and QEMU test files because those
-# call RVV-only functions which are undefined on x86 (only exist under __riscv_v)
+# ---------------------------------------------------------------------------
+# CRITICAL: Host tests must NEVER include RVV or QEMU test files.
+# Those call __riscv_v-only functions (sobel_rvv, magnitude_l1_rvv, etc.)
+# which are undefined on x86_64. They belong in cross-compiled QEMU targets.
+# ---------------------------------------------------------------------------
 HOST_TEST_SRCS := $(TEST_DIR)/test_gaussian.cpp \
-                  $(TEST_DIR)/test_sobel.cpp \
-                  $(TEST_DIR)/test_magnitude.cpp \
-                  $(TEST_DIR)/test_direction.cpp
+                   $(TEST_DIR)/test_sobel.cpp \
+                   $(TEST_DIR)/test_magnitude.cpp \
+                   $(TEST_DIR)/test_direction.cpp
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Runtime parameters (override on command line: make run VLEN=512 W=512 H=512)
-# ─────────────────────────────────────────────────────────────────────────────
-VLEN   ?= 256
-W      ?= 256
-H      ?= 256
-IMG    ?= input.raw
-PREFIX ?= output
+# ---------------------------------------------------------------------------
+# Runtime params
+# ---------------------------------------------------------------------------
+VLEN  ?= 256
+W     ?= 256
+H     ?= 256
+IMG   ?= input.raw
+PREFIX?= output
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Phony targets
-# ─────────────────────────────────────────────────────────────────────────────
-.PHONY: all test canny_rv run clean \
-        host run_host \
-        qemu_test run_qemu_test \
-        qemu_rvv_test run_rvv_tests \
-        qemu_sobel_rvv_test run_sobel_rvv_tests \
-        run_all_rvv_tests \
-        vlen_sweep
+# ---------------------------------------------------------------------------
+# Phony targets (single line — no backslash continuation issues)
+# ---------------------------------------------------------------------------
+.PHONY: all test canny_rv run clean host run_host qemu_test run_qemu_test qemu_rvv_test run_rvv_tests qemu_sobel_rvv_test run_sobel_rvv_tests qemu_gaussian_rvv_test run_gaussian_rvv_tests run_all_rvv_tests vlen_sweep lmul_sweep profile help
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ---------------------------------------------------------------------------
 # Default
-# ─────────────────────────────────────────────────────────────────────────────
+# ---------------------------------------------------------------------------
 all: canny_rv
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Host-side GoogleTest suite (x86/ARM — no RVV files, no QEMU test files)
-# ─────────────────────────────────────────────────────────────────────────────
+# ---------------------------------------------------------------------------
+# Host-side tests (x86/ARM — scalar only, no RVV symbols)
+# ---------------------------------------------------------------------------
 test: $(LIB_SRCS) $(HOST_TEST_SRCS)
 	@mkdir -p $(HOST_BUILD)
-	$(HOST_CXX) $(HOST_FLAGS) $(GTEST_INC) $^ $(GTEST_LIB) \
-		-o $(HOST_BUILD)/host_tests
+	$(HOST_CXX) $(HOST_FLAGS) $(GTEST_INC) $^ $(GTEST_LIB) -o $(HOST_BUILD)/host_tests
 	./$(HOST_BUILD)/host_tests
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Cross-compiled RISC-V binary (scalar + RVV)
-# ─────────────────────────────────────────────────────────────────────────────
+# ---------------------------------------------------------------------------
+# RISC-V cross-compiled binary (scalar + RVV intrinsics)
+# ---------------------------------------------------------------------------
 canny_rv: $(LIB_SRCS) $(MAIN_SRC) $(RVV_SRCS)
 	@mkdir -p $(RV_BUILD)
 	$(RV_CXX) $(RV_FLAGS) $^ -o $(RV_BUILD)/canny_rv
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Run the RISC-V binary on QEMU
-# Usage: make run [VLEN=256] [W=256] [H=256] [IMG=input.raw] [PREFIX=output]
-# ─────────────────────────────────────────────────────────────────────────────
+# ---------------------------------------------------------------------------
+# Run on QEMU
+# ---------------------------------------------------------------------------
 run: canny_rv
-	qemu-riscv64 -cpu rv64,v=true,vlen=$(VLEN) $(RV_BUILD)/canny_rv \
-		$(W) $(H) $(IMG) $(PREFIX)
+	qemu-riscv64 -cpu rv64,v=true,vlen=$(VLEN) $(RV_BUILD)/canny_rv $(W) $(H) $(IMG) $(PREFIX)
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Host-side binary (native x86, no QEMU — useful for quick correctness checks)
-# Usage: make run_host [W=256] [H=256] [IMG=input.raw] [PREFIX=output]
-# ─────────────────────────────────────────────────────────────────────────────
+# ---------------------------------------------------------------------------
+# Native host binary (no QEMU, no RVV)
+# ---------------------------------------------------------------------------
 host: $(LIB_SRCS) $(MAIN_SRC)
 	@mkdir -p $(HOST_BUILD)
 	$(HOST_CXX) $(HOST_FLAGS) $^ -o $(HOST_BUILD)/canny_host
@@ -107,9 +90,9 @@ host: $(LIB_SRCS) $(MAIN_SRC)
 run_host: host
 	./$(HOST_BUILD)/canny_host $(W) $(H) $(IMG) $(PREFIX)
 
-# ─────────────────────────────────────────────────────────────────────────────
-# QEMU-side scalar equivalence test (assert-based, cross-compiled)
-# ─────────────────────────────────────────────────────────────────────────────
+# ---------------------------------------------------------------------------
+# QEMU-side scalar equivalence test
+# ---------------------------------------------------------------------------
 qemu_test: $(LIB_SRCS) $(SRC_DIR)/main_qemu_test.cpp
 	@mkdir -p $(RV_BUILD)
 	$(RV_CXX) $(RV_FLAGS) $^ -o $(RV_BUILD)/qemu_test
@@ -119,55 +102,79 @@ run_qemu_test: qemu_test
 	qemu-riscv64 -cpu rv64,v=true,vlen=256 $(RV_BUILD)/qemu_test
 	qemu-riscv64 -cpu rv64,v=true,vlen=512 $(RV_BUILD)/qemu_test
 
-# ─────────────────────────────────────────────────────────────────────────────
-# QEMU-side RVV equivalence test (scalar vs RVV pixel-by-pixel, cross-compiled)
-# ─────────────────────────────────────────────────────────────────────────────
+# ---------------------------------------------------------------------------
+# QEMU-side RVV equivalence tests (cross-compiled, run under QEMU)
+# ---------------------------------------------------------------------------
+qemu_gaussian_rvv_test: $(LIB_SRCS) $(RVV_SRCS) $(TEST_DIR)/Test_gaussian_rvv_qemu.cpp
+	@mkdir -p $(RV_BUILD)
+	$(RV_CXX) $(RV_FLAGS) $^ -o $(RV_BUILD)/qemu_gaussian_rvv_test
+
+run_gaussian_rvv_tests: qemu_gaussian_rvv_test
+	@for v in 128 256 512; do \
+		echo "=== VLEN=$$v ==="; \
+		qemu-riscv64 -cpu rv64,v=true,vlen=$$v $(RV_BUILD)/qemu_gaussian_rvv_test; \
+	done
+
 qemu_rvv_test: $(LIB_SRCS) $(RVV_SRCS) $(TEST_DIR)/Test_magnitude_rvv_qemu.cpp
 	@mkdir -p $(RV_BUILD)
 	$(RV_CXX) $(RV_FLAGS) $^ -o $(RV_BUILD)/qemu_rvv_test
 
 run_rvv_tests: qemu_rvv_test
-	@for VLEN in 128 256 512; do \
-		echo "=== VLEN=$$VLEN ==="; \
-		qemu-riscv64 -cpu rv64,v=true,vlen=$$VLEN $(RV_BUILD)/qemu_rvv_test; \
+	@for v in 128 256 512; do \
+		echo "=== VLEN=$$v ==="; \
+		qemu-riscv64 -cpu rv64,v=true,vlen=$$v $(RV_BUILD)/qemu_rvv_test; \
 	done
 
-# ─────────────────────────────────────────────────────────────────────────────
-# QEMU-side Sobel RVV equivalence test (scalar vs RVV)
-# ─────────────────────────────────────────────────────────────────────────────
 qemu_sobel_rvv_test: $(LIB_SRCS) $(RVV_SRCS) $(TEST_DIR)/Test_sobel_rvv_qemu.cpp
 	@mkdir -p $(RV_BUILD)
 	$(RV_CXX) $(RV_FLAGS) $^ -o $(RV_BUILD)/qemu_sobel_rvv_test
 
 run_sobel_rvv_tests: qemu_sobel_rvv_test
-	@for VLEN in 128 256 512; do \
-		echo "=== VLEN=$$VLEN ==="; \
-		qemu-riscv64 -cpu rv64,v=true,vlen=$$VLEN $(RV_BUILD)/qemu_sobel_rvv_test; \
+	@for v in 128 256 512; do \
+		echo "=== VLEN=$$v ==="; \
+		qemu-riscv64 -cpu rv64,v=true,vlen=$$v $(RV_BUILD)/qemu_sobel_rvv_test; \
 	done
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Run ALL RVV equivalence tests (magnitude + sobel)
-# ─────────────────────────────────────────────────────────────────────────────
-run_all_rvv_tests: run_rvv_tests run_sobel_rvv_tests
+run_all_rvv_tests: run_gaussian_rvv_tests run_rvv_tests run_sobel_rvv_tests
 
-# ─────────────────────────────────────────────────────────────────────────────
-# VLEN sweep — run at 128/256/512 and diff outputs to verify VLA correctness
-# Usage: make vlen_sweep W=256 H=256 IMG=input.raw
-# ─────────────────────────────────────────────────────────────────────────────
+# ---------------------------------------------------------------------------
+# Analysis tools
+# ---------------------------------------------------------------------------
 vlen_sweep: canny_rv
-	@echo "=== VLEN Sweep ==="
-	@for VLEN in 128 256 512; do \
-		echo "--- VLEN=$$VLEN ---"; \
-		qemu-riscv64 -cpu rv64,v=true,vlen=$$VLEN $(RV_BUILD)/canny_rv \
-			$(W) $(H) $(IMG) output_vlen$$VLEN; \
-	done
-	@diff output_vlen128_mag_l1.raw output_vlen256_mag_l1.raw \
-		&& echo "128 vs 256: MATCH" || echo "128 vs 256: MISMATCH"
-	@diff output_vlen128_mag_l1.raw output_vlen512_mag_l1.raw \
-		&& echo "128 vs 512: MATCH" || echo "128 vs 512: MISMATCH"
+	@bash $(TOOLS_DIR)/vlen_sweep.sh
 
-# ─────────────────────────────────────────────────────────────────────────────
+lmul_sweep: $(LIB_SRCS) $(RVV_SRCS) $(TOOLS_DIR)/lmul_sweep.cpp
+	@mkdir -p $(RV_BUILD)
+	$(RV_CXX) $(RV_FLAGS) $(LIB_SRCS) $(RVV_SRCS) $(TOOLS_DIR)/lmul_sweep.cpp -o $(RV_BUILD)/lmul_sweep
+	qemu-riscv64 -cpu rv64,v=true,vlen=$(VLEN) $(RV_BUILD)/lmul_sweep $(W) $(H) $(IMG)
+
+profile: canny_rv
+	@bash $(TOOLS_DIR)/collect_profile_data.sh
+
+# ---------------------------------------------------------------------------
+# Help
+# ---------------------------------------------------------------------------
+help:
+	@echo "Available targets:"
+	@echo "  make test                  Host-side GoogleTest (x86)"
+	@echo "  make canny_rv              Cross-compile for RISC-V"
+	@echo "  make run                   Run on QEMU (VLEN=$(VLEN))"
+	@echo "  make host                  Build native x86 binary"
+	@echo "  make run_host              Run native x86 binary"
+	@echo "  make run_qemu_test         Scalar equivalence on QEMU"
+	@echo "  make run_gaussian_rvv_tests  Gaussian RVV on QEMU"
+	@echo "  make run_rvv_tests         Magnitude RVV on QEMU"
+	@echo "  make run_sobel_rvv_tests   Sobel RVV on QEMU"
+	@echo "  make run_all_rvv_tests     All RVV tests on QEMU"
+	@echo "  make vlen_sweep            VLEN=128/256/512 sweep"
+	@echo "  make lmul_sweep            LMUL=1 vs LMUL=2 comparison"
+	@echo "  make profile               Collect profiling data (JSON)"
+	@echo "  make clean                 Remove build artifacts"
+
+# ---------------------------------------------------------------------------
 # Clean
-# ─────────────────────────────────────────────────────────────────────────────
+# ---------------------------------------------------------------------------
 clean:
-	rm -rf build output_vlen*.raw
+	rm -rf build output_vlen*.raw prof_*.raw
+	@echo "  IMG=path.raw       Input image  (default: input.raw)"
+	@echo "  PREFIX=out         Output prefix"
