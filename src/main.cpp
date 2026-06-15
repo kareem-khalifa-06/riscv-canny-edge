@@ -12,6 +12,7 @@
 // RVV function declarations (defined in rvv/)
 #ifdef __riscv_v
 void gaussian_5x5_rvv(const uint8_t* src, uint8_t* dst, int w, int h);
+void sobel_rvv(const uint8_t* src, int16_t* Gx, int16_t* Gy, int w, int h);
 void magnitude_l1_rvv(const int16_t* Gx, const int16_t* Gy, uint8_t* mag, int w, int h);
 #endif
 
@@ -82,6 +83,8 @@ int main(int argc, char** argv) {
 
 #ifdef __riscv_v
     uint8_t* blurred_rvv = alloc_image(w, h);
+    int16_t* Gx_rvv      = (int16_t*)aligned_alloc(64, w * h * sizeof(int16_t));
+    int16_t* Gy_rvv      = (int16_t*)aligned_alloc(64, w * h * sizeof(int16_t));
     uint8_t* mag_rvv     = alloc_image(w, h);
 
     printf("\n");
@@ -94,26 +97,32 @@ int main(int argc, char** argv) {
     printf("[RVV  ] Gaussian Blur:    %.3f ms  (%.1fx speedup vs scalar)\n",
            rvv_gauss, (t2-t1)/(r2-r1));
 
-    // Sobel is scalar-only — reuse Gx/Gy from above
-    printf("[RVV  ] Sobel Gradient:   scalar only\n");
-
     double r3 = now_ms();
     for (int i = 0; i < 100; i++)
-        magnitude_l1_rvv(Gx, Gy, mag_rvv, w, h);
+        sobel_rvv(blurred_rvv, Gx_rvv, Gy_rvv, w, h);
     double r4 = now_ms();
-    double rvv_mag = (r4-r3)/100.0;
+    double rvv_sobel = (r4-r3)/100.0;
+    printf("[RVV  ] Sobel Gradient:   %.3f ms  (%.1fx speedup vs scalar)\n",
+           rvv_sobel, (t4-t3)/(r4-r3));
+
+    double r5 = now_ms();
+    for (int i = 0; i < 100; i++)
+        magnitude_l1_rvv(Gx_rvv, Gy_rvv, mag_rvv, w, h);
+    double r6 = now_ms();
+    double rvv_mag = (r6-r5)/100.0;
     printf("[RVV  ] Magnitude L1:     %.3f ms  (%.1fx speedup vs scalar)\n",
-           rvv_mag, (t6-t5)/(r4-r3));
+           rvv_mag, (t6-t5)/(r6-r5));
 
     printf("[RVV  ] Magnitude L2:     scalar only\n");
     printf("[RVV  ] Direction:        scalar only\n");
 
-    double rvv_total = rvv_gauss + (t4-t3)/100.0 + rvv_mag
+    double rvv_total = rvv_gauss + rvv_sobel + rvv_mag
                      + (t8-t7)/100.0 + (t10-t9)/100.0;
     printf("\n[RVV  ] Total pipeline:   %.3f ms  (%.1fx speedup vs scalar)\n",
            rvv_total, scalar_total / rvv_total);
 
     free(blurred_rvv);
+    free(Gx_rvv); free(Gy_rvv);
     free(mag_rvv);
 #endif
 
