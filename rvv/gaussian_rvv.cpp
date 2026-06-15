@@ -147,9 +147,11 @@ void gaussian_5x5_rvv_m1(const uint8_t* __restrict__ src,
                 }
             }
 
-            // Fixed-point divide by 273: (acc × 240) >> 16
+            // Fixed-point divide by 273: ((acc × 240) + 32640) >> 16
+            // 32640 = 136 * 240, matching scalar's (sum + 136) / 273 rounding
             vint32m4_t scaled = __riscv_vmul_vx_i32m4(acc, FP_MULT, vl);
-            vint32m4_t norm   = __riscv_vsra_vx_i32m4(scaled, FP_SHIFT, vl);
+            vint32m4_t scaled_rounded = __riscv_vadd_vx_i32m4(scaled, 136 * FP_MULT, vl);
+            vint32m4_t norm   = __riscv_vsra_vx_i32m4(scaled_rounded, FP_SHIFT, vl);
 
             // Clamp to [0,255] before narrowing (avoids vnclipu UB)
             vint32m4_t clamped = __riscv_vmax_vx_i32m4(norm,    0,   vl);
@@ -231,8 +233,10 @@ void gaussian_5x5_rvv_m2(const uint8_t* __restrict__ src,
                 }
             }
 
+            // Fixed-point divide by 273: ((acc × 240) + 32640) >> 16
             vint32m8_t  scaled   = __riscv_vmul_vx_i32m8(acc, FP_MULT, vl);
-            vint32m8_t  norm     = __riscv_vsra_vx_i32m8(scaled, FP_SHIFT, vl);
+            vint32m8_t  scaled_rounded = __riscv_vadd_vx_i32m8(scaled, 136 * FP_MULT, vl);
+            vint32m8_t  norm     = __riscv_vsra_vx_i32m8(scaled_rounded, FP_SHIFT, vl);
             vint32m8_t  clamped  = __riscv_vmax_vx_i32m8(norm,    0,   vl);
                         clamped  = __riscv_vmin_vx_i32m8(clamped, 255, vl);
             vuint16m4_t narrow16 = __riscv_vnclipu_wx_u16m4(
@@ -262,7 +266,7 @@ void gaussian_5x5_rvv_m2(const uint8_t* __restrict__ src,
 }
 
 // Public dispatch: defaults to m1.
-void gaussian_5x5_rvv(const uint8_t* src, uint8_t* dst, int w, int h) {
+extern "C" void gaussian_5x5_rvv(const uint8_t* src, uint8_t* dst, int w, int h) {
     gaussian_5x5_rvv_m1(src, dst, w, h);
 }
 

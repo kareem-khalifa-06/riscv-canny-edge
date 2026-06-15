@@ -84,6 +84,8 @@ TEST(NMS, VerticalRidgeDirection2) {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 3. 45-degree diagonal ridge — direction 1
+//    Gradient at 45°, edge runs \ (top-left to bottom-right)
+//    NMS checks neighbours along gradient: top-left and bottom-right
 // ─────────────────────────────────────────────────────────────────────────────
 TEST(NMS, Diagonal45RidgeDirection1) {
     const int W = 5, H = 5, N = W * H;
@@ -94,25 +96,27 @@ TEST(NMS, Diagonal45RidgeDirection1) {
     memset(mag, 0, N);
     memset(dir, 0, N);
 
-    // 45-degree diagonal: centre at (2,2), neighbours at (1,3) and (3,1)
-    mag[3 * W + 1] = 200;  // bottom-left
+    // 45-degree gradient: centre at (2,2), neighbours along gradient at (1,1) and (3,3)
+    mag[1 * W + 1] = 200;  // top-left
     mag[2 * W + 2] = 255;  // centre — should survive
-    mag[1 * W + 3] = 200;  // top-right
-    dir[3 * W + 1] = 1;
+    mag[3 * W + 3] = 200;  // bottom-right
+    dir[1 * W + 1] = 1;
     dir[2 * W + 2] = 1;
-    dir[1 * W + 3] = 1;
+    dir[3 * W + 3] = 1;
 
     non_maximum_suppression(mag, dir, out, W, H);
 
     EXPECT_EQ(out[2 * W + 2], 255u) << "45-deg diagonal centre should survive";
-    EXPECT_EQ(out[3 * W + 1], 0u)   << "Neighbour should be suppressed";
-    EXPECT_EQ(out[1 * W + 3], 0u)   << "Neighbour should be suppressed";
+    EXPECT_EQ(out[1 * W + 1], 0u)   << "Neighbour should be suppressed";
+    EXPECT_EQ(out[3 * W + 3], 0u)   << "Neighbour should be suppressed";
 
     free(mag); free(dir); free(out);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 4. 135-degree diagonal ridge — direction 3
+//    Gradient at 135°, edge runs / (top-right to bottom-left)
+//    NMS checks neighbours along gradient: top-right and bottom-left
 // ─────────────────────────────────────────────────────────────────────────────
 TEST(NMS, Diagonal135RidgeDirection3) {
     const int W = 5, H = 5, N = W * H;
@@ -123,19 +127,19 @@ TEST(NMS, Diagonal135RidgeDirection3) {
     memset(mag, 0, N);
     memset(dir, 0, N);
 
-    // 135-degree diagonal: centre at (2,2), neighbours at (1,1) and (3,3)
-    mag[1 * W + 1] = 200;  // top-left
+    // 135-degree gradient: centre at (2,2), neighbours along gradient at (1,3) and (3,1)
+    mag[1 * W + 3] = 200;  // top-right
     mag[2 * W + 2] = 255;  // centre — should survive
-    mag[3 * W + 3] = 200;  // bottom-right
-    dir[1 * W + 1] = 3;
+    mag[3 * W + 1] = 200;  // bottom-left
+    dir[1 * W + 3] = 3;
     dir[2 * W + 2] = 3;
-    dir[3 * W + 3] = 3;
+    dir[3 * W + 1] = 3;
 
     non_maximum_suppression(mag, dir, out, W, H);
 
     EXPECT_EQ(out[2 * W + 2], 255u) << "135-deg diagonal centre should survive";
-    EXPECT_EQ(out[1 * W + 1], 0u)   << "Neighbour should be suppressed";
-    EXPECT_EQ(out[3 * W + 3], 0u)   << "Neighbour should be suppressed";
+    EXPECT_EQ(out[1 * W + 3], 0u)   << "Neighbour should be suppressed";
+    EXPECT_EQ(out[3 * W + 1], 0u)   << "Neighbour should be suppressed";
 
     free(mag); free(dir); free(out);
 }
