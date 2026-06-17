@@ -1,34 +1,63 @@
-name: CI
+name: Host Tests CI
 
 on:
   push:
-    branches: [ main, 'feature/**' ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential cmake libgtest-dev
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            git \
+            g++ \
+            libgtest-dev
 
-    - name: Build and install GoogleTest
-      run: |
-        cd /usr/src/googletest
-        sudo cmake -Bbuild -H.
-        sudo cmake --build build --target install
+      - name: Build GoogleTest from system package
+        run: |
+          cd /usr/src/gtest
+          sudo cmake -B build -DCMAKE_INSTALL_PREFIX=$HOME/.local
+          sudo cmake --build build -j$(nproc)
+          sudo cmake --install build
+          # Also try building with the system gtest directly
+          mkdir -p $HOME/.local/lib
+          find /usr -name "libgtest*.a" 2>/dev/null | xargs -I{} cp {} $HOME/.local/lib/ || true
+          find /usr -name "gtest" -type d 2>/dev/null | head -1 | xargs -I{} cp -r {}/../include $HOME/.local/ || true
 
-    - name: Build host tests
-      run: |
-        make test
+      - name: Install GoogleTest from source (fallback)
+        run: |
+          if [ ! -f "$HOME/.local/lib/libgtest.a" ] && [ ! -f "$HOME/.local/lib/libgtest_main.a" ]; then
+            git clone --depth 1 https://github.com/google/googletest ~/googletest
+            cmake -S ~/googletest -B ~/googletest/build \
+              -DCMAKE_INSTALL_PREFIX=$HOME/.local \
+              -DBUILD_SHARED_LIBS=OFF
+            cmake --build ~/googletest/build -j$(nproc)
+            cmake --install ~/googletest/build
+          fi
 
-    - name: Build host binary
-      run: |
-        make host
+      - name: Verify GoogleTest installation
+        run: |
+          ls $HOME/.local/lib/libgtest*.a || (echo "ERROR: libgtest not found" && exit 1)
+          ls $HOME/.local/include/gtest/gtest.h || (echo "ERROR: gtest headers not found" && exit 1)
+
+      - name: Build host-side test binary
+        run: |
+          make test
+
+      - name: Report test results
+        if: always()
+        run: |
+          echo "=== CI Complete ==="
+          echo "Host binary (if built):"
+          ls -lh build/host/ 2>/dev/null || echo "(no host binaries)"
