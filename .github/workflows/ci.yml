@@ -27,12 +27,14 @@ jobs:
             -DBUILD_SHARED_LIBS=OFF
           cmake --build ~/googletest/build -j$(nproc)
           cmake --install ~/googletest/build
-
-      - name: Verify GoogleTest installation
-        run: |
-          ls $HOME/.local/lib/libgtest.a
-          ls $HOME/.local/lib/libgtest_main.a
-          ls $HOME/.local/include/gtest/gtest.h
+          echo "--- installed files ---"
+          find $HOME/.local -name "*.h" | grep gtest | head -10
+          find $HOME/.local -name "libgtest*" | head -10
 
       - name: Build and run host-side tests
-        run: make test
+        run: |
+          GTEST_INC=$(find $HOME/.local -name "gtest.h" -path "*/gtest/gtest.h" | head -1 | xargs dirname | xargs dirname)
+          GTEST_LIB=$(find $HOME/.local -name "libgtest_main.a" | head -1 | xargs dirname)
+          echo "GTEST_INC=$GTEST_INC"
+          echo "GTEST_LIB=$GTEST_LIB"
+          make test GTEST_INC="-I${GTEST_INC}" GTEST_LIB="-L${GTEST_LIB} -lgtest -lgtest_main -lpthread"
