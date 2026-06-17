@@ -58,7 +58,7 @@ HIGH  ?= 50
 # ---------------------------------------------------------------------------
 # Phony targets
 # ---------------------------------------------------------------------------
-.PHONY: all test canny_rv run clean host run_host qemu_test run_qemu_test qemu_rvv_test run_rvv_tests qemu_sobel_rvv_test run_sobel_rvv_tests qemu_gaussian_rvv_test run_gaussian_rvv_tests qemu_direction_rvv_test run_direction_rvv_tests run_all_rvv_tests vlen_sweep lmul_sweep profile help bonus_test
+.PHONY: all test canny_rv run clean host run_host qemu_test run_qemu_test qemu_rvv_test run_rvv_tests qemu_sobel_rvv_test run_sobel_rvv_tests qemu_gaussian_rvv_test run_gaussian_rvv_tests qemu_direction_rvv_test run_direction_rvv_tests run_all_rvv_tests vlen_sweep lmul_sweep profile help bonus_test opt_sweep
 
 # ---------------------------------------------------------------------------
 # Default
@@ -174,6 +174,33 @@ profile: canny_rv
 	@bash $(TOOLS_DIR)/collect_profile_data.sh
 
 # ---------------------------------------------------------------------------
+# Bonus integration test: full pipeline with NMS + hysteresis on QEMU
+# Builds the main RISC-V binary and runs it with a test image.
+# Requires IMG= to point to a real .raw file (generate one with gen_test_image).
+# ---------------------------------------------------------------------------
+bonus_test: canny_rv
+	@echo "=== Running bonus pipeline (NMS + hysteresis) at VLEN=$(VLEN) ==="
+	qemu-riscv64 -cpu rv64,v=true,vlen=$(VLEN) $(RV_BUILD)/canny_rv $(W) $(H) $(IMG) $(PREFIX) $(LOW) $(HIGH)
+	@echo "=== Bonus test complete. Check $(PREFIX)_nms.raw and $(PREFIX)_edges.raw ==="
+
+# ---------------------------------------------------------------------------
+# Compiler optimisation sweep (Phase 4) — builds at each flag level and
+# measures binary size.  Timing must be read from QEMU run output manually.
+# ---------------------------------------------------------------------------
+opt_sweep: $(LIB_SRCS) $(MAIN_SRC) $(RVV_SRCS)
+	@mkdir -p $(RV_BUILD)
+	@for flag in -O0 -O2 -O3 -Os -Ofast; do \
+		echo "Building with $$flag ..."; \
+		$(RV_CXX) -march=rv64gcv $$flag -std=c++17 -Wall -static \
+		    $(LIB_SRCS) $(MAIN_SRC) $(RVV_SRCS) \
+		    -o $(RV_BUILD)/canny_rv_$${flag#-}; \
+		SIZE=$$(size $(RV_BUILD)/canny_rv_$${flag#-} | tail -1 | awk '{print $$4}'); \
+		echo "  $$flag binary: $$(( $$SIZE / 1024 )) KB"; \
+	done
+	@echo ""
+	@echo "Run each binary with: qemu-riscv64 -cpu rv64,v=true,vlen=256 build/rv/canny_rv_<flag> <W> <H> <img> <prefix>"
+
+# ---------------------------------------------------------------------------
 # Help
 # ---------------------------------------------------------------------------
 help:
@@ -182,6 +209,8 @@ help:
 	@echo "  make canny_rv              Cross-compile for RISC-V"
 	@echo "  make run                   Run on QEMU (VLEN=$(VLEN))"
 	@echo "  make run_bonus             Run with custom thresholds LOW= HIGH="
+	@echo "  make bonus_test            QEMU integration test (NMS + hysteresis)"
+	@echo "  make opt_sweep             Build at O0/O2/O3/Os/Ofast; print sizes"
 	@echo "  make host                  Build native x86 binary"
 	@echo "  make run_host              Run native x86 binary"
 	@echo "  make run_qemu_test         Scalar equivalence on QEMU"
@@ -200,7 +229,7 @@ help:
 	@echo "  W=256 H=256        Image dimensions"
 	@echo "  IMG=path.raw       Input image"
 	@echo "  PREFIX=out         Output prefix"
-	@echo "  LOW=20 HIGH=50     Threshold values (for run_bonus)"
+	@echo "  LOW=20 HIGH=50     Threshold values (for run_bonus / bonus_test)"
 
 # ---------------------------------------------------------------------------
 # Clean
