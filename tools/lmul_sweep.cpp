@@ -1,13 +1,3 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// LMUL Sweep — Compares Gaussian RVV at LMUL=1 vs LMUL=2
-//
-// Build:   riscv64-unknown-elf-g++ -march=rv64gcv -O3 -o build/lmul_sweep \
-//              tools/lmul_sweep.cpp rvv/gaussian_rvv.cpp -I.
-// Run:     qemu-riscv64 -cpu rv64,v=true,vlen=256 build/lmul_sweep
-//
-// Output:  Timing for m1 and m2 variants, speedup ratio, and a recommendation
-//          for which LMUL to use in the final build.
-// ─────────────────────────────────────────────────────────────────────────────
 
 #include <cstdio>
 #include <cstdlib>
