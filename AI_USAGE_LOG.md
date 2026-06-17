@@ -115,4 +115,36 @@ Gaussian and Sobel because of boundary checks. This data directly justifies
 why we need manual RVV intrinsics — the compiler cannot do it automatically.
 This is Amdahl's law in practice: optimize where the compiler cannot help.
 
+---
 
+## Entry 6 — Repository Audit and Bug Fixes
+
+**Question asked:**
+We asked Claude to review our complete GitHub repository, assess which project
+phases were complete, and identify any bugs or issues before the final submission.
+
+**What AI suggested:**
+After cloning and reading all 32 source files, Claude identified three bugs:
+1. `tests/test_direction_rvv_qemu.cpp` (lowercase) was a byte-for-byte duplicate
+   of `tests/Test_direction_rvv_qemu.cpp` (uppercase, which is what the Makefile uses).
+2. `tests/test_magnitude_rvv.cpp` and `tests/test_sobel_rvv.cpp` called RVV functions
+   (`magnitude_l1_rvv`, `sobel_rvv`) inside GoogleTest without `#ifdef __riscv_v` guards.
+   They were not in any Makefile target and could not compile on the host — orphaned files.
+3. `bonus_test` was listed in `.PHONY` but had no rule definition, meaning
+   `make bonus_test` would crash with "No rule to make target" during a demo.
+
+Claude also added a new `opt_sweep` Makefile target to build at O0/O2/O3/Os/Ofast
+and print binary sizes automatically, replacing a manual step from Phase 4.
+
+**What we changed:**
+- Deleted the 3 orphaned/duplicate files with `git rm`
+- Added the `bonus_test` rule to the Makefile (runs full pipeline with NMS + hysteresis)
+- Added the `opt_sweep` rule to the Makefile (Phase 4 compiler sweep)
+- Committed as PR #12 and merged to main
+
+**What we learned:**
+Always run `git diff --stat` before a demo — a missing Makefile rule in `.PHONY`
+is invisible until it crashes in front of the instructor. Static analysis of the
+repository (not just the code) catches integration-level bugs that unit tests miss.
+The `#ifdef __riscv_v` guard pattern should be used in any file that calls RVV
+intrinsics, to prevent accidental host compilation.

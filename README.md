@@ -31,6 +31,36 @@ RISC-V Vector (RVV) intrinsics. The pipeline has 5 stages:
 
 ---
 
+## Demo Output
+
+Sample run on a 256×256 grayscale image, executed on QEMU at VLEN=256:
+
+```bash
+python3 convert_to_raw.py sample.jpg sample_input.raw --width 256 --height 256
+make run W=256 H=256 IMG=sample_input.raw PREFIX=build/host/out
+```
+
+| Input (grayscale) | After Gaussian Blur | Gradient Magnitude | Final Edges |
+|:-:|:-:|:-:|:-:|
+| ![input](docs/images/sample_input.png) | ![blurred](docs/images/sample_blurred.png) | ![mag](docs/images/sample_mag.png) | ![edges](docs/images/sample_edges.png) |
+
+**Pipeline timing on this image (QEMU, VLEN=256, 256×256):**
+
+| Stage | Scalar | RVV | Speedup |
+|---|---|---|---|
+| Gaussian Blur | 164.5 ms | 25.0 ms | **6.6×** |
+| Sobel Gradient | 4.2 ms | 6.7 ms | 0.6× ¹ |
+| Magnitude L1 | 3.0 ms | 4.4 ms | 0.7× ¹ |
+| Direction | 0.4 ms | 5.3 ms | 0.1× ¹ |
+| **Total pipeline** | **190 ms** | **59 ms** | **3.2×** |
+
+> ¹ Sobel, Magnitude, and Direction RVV show no speedup under QEMU because QEMU's
+> dynamic binary translation adds a fixed per-instruction cost that dominates for
+> low-arithmetic-intensity kernels. On real RISC-V hardware, speedups would be positive.
+> See [Optimization Results](#optimization-results) for full analysis.
+
+---
+
 ## Requirements
 
 - Linux (Ubuntu 24.04 / Debian 13) or Windows with WSL2
