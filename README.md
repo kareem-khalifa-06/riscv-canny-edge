@@ -9,7 +9,7 @@ Canny edge detection pipeline targeting **rv64gcv**, running on QEMU user-mode e
 | Language | C++ (C++17)    |
 | Target   | RISC-V rv64gcv |
 | Emulator | QEMU 8.x+      |
-| Team     | 4 engineers    |
+| Team     | 5 engineers    |
 | Duration | 4 weeks        |
 
 ---
