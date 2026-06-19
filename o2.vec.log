@@ -1,0 +1,1115 @@
+src/image_io.cpp:7:30: missed: statement clobbers memory: ptr_11 = aligned_alloc (64, sz_8);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:111:24: missed: statement clobbers memory: __fprintf_chk (stderr.0_5, 2, "alloc_image: out of memory\n");
+src/image_io.cpp:10:13: missed: statement clobbers memory: exit (1);
+src/image_io.cpp:10:13: note: ***** Analysis failed with vector mode RVVM1DI
+src/image_io.cpp:10:13: note: ***** Skipping vector mode RVVM1QI, which would repeat the analysis for RVVM1DI
+src/image_io.cpp:16:20: missed: statement clobbers memory: _11 = fopen (path_9(D), "rb");
+src/image_io.cpp:7:30: missed: statement clobbers memory: ptr_39 = aligned_alloc (64, sz_38);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:336:22: missed: statement clobbers memory: _26 = __fread_chk (ptr_39, sz_38, 1, _36, _11);
+src/image_io.cpp:24:11: missed: statement clobbers memory: fclose (_11);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:111:24: missed: statement clobbers memory: __fprintf_chk (stderr.2_7, 2, "load_raw: expected %d bytes, got %zu\n", _6, _26);
+src/image_io.cpp:27:13: missed: statement clobbers memory: exit (1);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:111:24: missed: statement clobbers memory: __fprintf_chk (stderr.0_40, 2, "alloc_image: out of memory\n");
+src/image_io.cpp:10:13: missed: statement clobbers memory: exit (1);
+src/image_io.cpp:18:15: missed: statement clobbers memory: perror ("load_raw: fopen failed");
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:111:24: missed: statement clobbers memory: __fprintf_chk (stderr.1_1, 2, "load_raw: cannot open %s\n", path_9(D));
+src/image_io.cpp:20:13: missed: statement clobbers memory: exit (1);
+src/image_io.cpp:20:13: note: ***** Analysis failed with vector mode RVVM1DI
+src/image_io.cpp:20:13: note: ***** Skipping vector mode RVVM1QI, which would repeat the analysis for RVVM1DI
+src/image_io.cpp:33:20: missed: statement clobbers memory: _8 = fopen (path_6(D), "wb");
+src/image_io.cpp:39:11: missed: statement clobbers memory: fwrite (buf_11(D), 1, _4, _8);
+src/image_io.cpp:40:11: missed: statement clobbers memory: fclose (_8);
+src/image_io.cpp:35:15: missed: statement clobbers memory: perror ("save_raw: fopen failed");
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:111:24: missed: statement clobbers memory: __fprintf_chk (stderr.3_1, 2, "save_raw: cannot open %s\n", path_6(D));
+src/image_io.cpp:37:13: missed: statement clobbers memory: exit (1);
+src/image_io.cpp:37:13: note: ***** Analysis failed with vector mode RVVM1DI
+src/image_io.cpp:37:13: note: ***** Skipping vector mode RVVM1QI, which would repeat the analysis for RVVM1DI
+src/sobel.cpp:18:23: missed: couldn't vectorize loop
+src/sobel.cpp:18:23: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+src/sobel.cpp:19:27: missed: couldn't vectorize loop
+src/sobel.cpp:19:27: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+src/sobel.cpp:23:42: missed: couldn't vectorize loop
+src/sobel.cpp:30:33: missed: not vectorized: data ref analysis failed: pixel_55 = .MASK_LOAD (_10, 8B, _30, 0);
+src/sobel.cpp:24:46: missed: couldn't vectorize loop
+src/sobel.cpp:24:46: missed: not vectorized: unsupported data-type
+src/sobel.cpp:3:6: note: vectorized 0 loops in function.
+src/sobel.cpp:3:6: missed: splitting region at dont-vectorize loop 6 entry at bb29
+src/sobel.cpp:5:15: missed: not vectorized: more than one data ref in stmt: kx = *.LC0;
+src/sobel.cpp:12:15: missed: not vectorized: more than one data ref in stmt: ky = *.LC1;
+src/sobel.cpp:37:18: note: ***** Analysis failed with vector mode VOID
+src/sobel.cpp:37:18: missed: splitting region at loop 7 exit at bb37
+src/sobel.cpp:30:52: note: ***** Analysis failed with vector mode RVVM1QI
+src/sobel.cpp:30:52: note: ***** The result for vector mode RVVM1QI would be the same
+src/sobel.cpp:30:52: note: ***** Re-trying analysis with vector mode RVVMF2QI
+src/sobel.cpp:30:52: note: ***** Analysis failed with vector mode RVVMF2QI
+src/sobel.cpp:30:52: note: ***** Re-trying analysis with vector mode RVVMF4QI
+src/sobel.cpp:30:52: note: ***** Analysis failed with vector mode RVVMF4QI
+src/sobel.cpp:30:52: note: ***** Re-trying analysis with vector mode RVVMF8QI
+src/sobel.cpp:30:52: note: ***** Analysis failed with vector mode RVVMF8QI
+src/sobel.cpp:30:52: note: ***** Re-trying analysis with vector mode V16QI
+src/sobel.cpp:30:52: note: ***** Analysis failed with vector mode V16QI
+src/sobel.cpp:30:52: note: ***** Re-trying analysis with vector mode V8QI
+src/sobel.cpp:30:52: note: ***** Analysis failed with vector mode V8QI
+src/sobel.cpp:30:52: note: ***** Re-trying analysis with vector mode V4QI
+src/sobel.cpp:30:52: note: ***** Analysis failed with vector mode V4QI
+src/sobel.cpp:30:52: note: ***** Re-trying analysis with vector mode V2QI
+src/sobel.cpp:30:52: note: ***** Analysis failed with vector mode V2QI
+src/sobel.cpp:30:52: note: ***** Re-trying analysis with vector mode V1QI
+src/sobel.cpp:30:52: note: ***** Analysis failed with vector mode V1QI
+src/sobel.cpp:30:52: missed: splitting region at loop 2 exit at bb23
+src/sobel.cpp:19:27: note: ***** Analysis failed with vector mode RVVM1HI
+src/sobel.cpp:19:27: note: ***** Skipping vector mode RVVM1QI, which would repeat the analysis for RVVM1HI
+src/sobel.cpp:19:27: missed: splitting region at dominance boundary bb11
+src/sobel.cpp:19:27: note: ***** Analysis failed with vector mode VOID
+src/sobel.cpp:19:27: missed: splitting region at loop 1 exit at bb24
+src/sobel.cpp:18:23: note: ***** Analysis failed with vector mode VOID
+src/sobel.cpp:18:23: missed: splitting region at dominance boundary bb14
+src/sobel.cpp:18:23: note: ***** Analysis failed with vector mode VOID
+src/sobel.cpp:41:1: note: ***** Analysis failed with vector mode VOID
+src/magnitude.cpp:17:23: missed: couldn't vectorize loop
+src/magnitude.cpp:17:23: missed: not vectorized: unsupported data-type
+src/magnitude.cpp:10:23: optimized: loop vectorized using variable length vectors
+src/magnitude.cpp:5:6: note: vectorized 1 loops in function.
+src/magnitude.cpp:11:34: missed: statement clobbers memory: vect__4.11_70 = .MASK_LEN_LOAD (vectp_Gx.9_73, 16B, { -1, ... }, _71(D), _48, 0);
+src/magnitude.cpp:11:52: missed: statement clobbers memory: vect__8.16_63 = .MASK_LEN_LOAD (vectp_Gy.14_66, 16B, { -1, ... }, _64(D), _48, 0);
+src/magnitude.cpp:18:17: note: ***** Analysis failed with vector mode RVVM1HI
+src/magnitude.cpp:18:17: note: ***** The result for vector mode RVVM1QI would be the same
+src/magnitude.cpp:18:17: note: ***** Re-trying analysis with vector mode RVVMF2QI
+src/magnitude.cpp:18:17: note: ***** Analysis failed with vector mode RVVMF2QI
+src/magnitude.cpp:18:17: note: ***** Re-trying analysis with vector mode RVVMF4QI
+src/magnitude.cpp:18:17: note: ***** Analysis failed with vector mode RVVMF4QI
+src/magnitude.cpp:18:17: note: ***** Re-trying analysis with vector mode RVVMF8QI
+src/magnitude.cpp:18:17: note: ***** Analysis failed with vector mode RVVMF8QI
+src/magnitude.cpp:18:17: note: ***** Re-trying analysis with vector mode V16QI
+src/magnitude.cpp:18:17: note: ***** Analysis succeeded with vector mode V16QI
+src/magnitude.cpp:18:17: note: SLPing BB part
+src/magnitude.cpp:18:17: note: Costing subgraph: 
+src/magnitude.cpp:18:17: note: node 0x12fdfe58 (max_nunits=2, refcnt=1) vector(2) int
+src/magnitude.cpp:18:17: note: op template: _16 = (int) _15;
+src/magnitude.cpp:18:17: note: 	stmt 0 _16 = (int) _15;
+src/magnitude.cpp:18:17: note: 	stmt 1 _21 = (int) _20;
+src/magnitude.cpp:18:17: note: 	children 0x12fdfee8
+src/magnitude.cpp:18:17: note: node 0x12fdfee8 (max_nunits=2, refcnt=1) vector(2) unsigned short
+src/magnitude.cpp:18:17: note: op template: _15 = ABSU_EXPR <_14>;
+src/magnitude.cpp:18:17: note: 	stmt 0 _15 = ABSU_EXPR <_14>;
+src/magnitude.cpp:18:17: note: 	stmt 1 _20 = ABSU_EXPR <_19>;
+src/magnitude.cpp:18:17: note: 	children 0x12fe0008
+src/magnitude.cpp:18:17: note: node (external) 0x12fe0008 (max_nunits=1, refcnt=1) vector(2) short int
+src/magnitude.cpp:18:17: note: 	{ _14, _19 }
+src/magnitude.cpp:18:17: note: Cost model analysis: 
+src/magnitude.cpp:18:17: note: Cost model analysis for part in loop 2:
+  Vector cost: 13
+  Scalar cost: 5
+src/magnitude.cpp:18:17: missed: not vectorized: vectorization is not profitable.
+src/magnitude.cpp:18:17: note: ***** Re-trying analysis with vector mode V8QI
+src/magnitude.cpp:18:17: note: ***** Analysis succeeded with vector mode V8QI
+src/magnitude.cpp:18:17: note: SLPing BB part
+src/magnitude.cpp:18:17: note: Costing subgraph: 
+src/magnitude.cpp:18:17: note: node 0x12fdfe58 (max_nunits=2, refcnt=1) vector(2) int
+src/magnitude.cpp:18:17: note: op template: _16 = (int) _15;
+src/magnitude.cpp:18:17: note: 	stmt 0 _16 = (int) _15;
+src/magnitude.cpp:18:17: note: 	stmt 1 _21 = (int) _20;
+src/magnitude.cpp:18:17: note: 	children 0x12fdfee8
+src/magnitude.cpp:18:17: note: node 0x12fdfee8 (max_nunits=2, refcnt=1) vector(2) unsigned short
+src/magnitude.cpp:18:17: note: op template: _15 = ABSU_EXPR <_14>;
+src/magnitude.cpp:18:17: note: 	stmt 0 _15 = ABSU_EXPR <_14>;
+src/magnitude.cpp:18:17: note: 	stmt 1 _20 = ABSU_EXPR <_19>;
+src/magnitude.cpp:18:17: note: 	children 0x12fdff78
+src/magnitude.cpp:18:17: note: node (external) 0x12fdff78 (max_nunits=1, refcnt=1) vector(2) short int
+src/magnitude.cpp:18:17: note: 	{ _14, _19 }
+src/magnitude.cpp:18:17: note: Cost model analysis: 
+src/magnitude.cpp:18:17: note: Cost model analysis for part in loop 2:
+  Vector cost: 13
+  Scalar cost: 5
+src/magnitude.cpp:18:17: missed: not vectorized: vectorization is not profitable.
+src/magnitude.cpp:18:17: note: ***** Re-trying analysis with vector mode V4QI
+src/magnitude.cpp:18:17: note: ***** Analysis succeeded with vector mode V4QI
+src/magnitude.cpp:18:17: note: SLPing BB part
+src/magnitude.cpp:18:17: note: Costing subgraph: 
+src/magnitude.cpp:18:17: note: node 0x12fdfe58 (max_nunits=2, refcnt=1) vector(2) int
+src/magnitude.cpp:18:17: note: op template: _16 = (int) _15;
+src/magnitude.cpp:18:17: note: 	stmt 0 _16 = (int) _15;
+src/magnitude.cpp:18:17: note: 	stmt 1 _21 = (int) _20;
+src/magnitude.cpp:18:17: note: 	children 0x12fdfee8
+src/magnitude.cpp:18:17: note: node 0x12fdfee8 (max_nunits=2, refcnt=1) vector(2) unsigned short
+src/magnitude.cpp:18:17: note: op template: _15 = ABSU_EXPR <_14>;
+src/magnitude.cpp:18:17: note: 	stmt 0 _15 = ABSU_EXPR <_14>;
+src/magnitude.cpp:18:17: note: 	stmt 1 _20 = ABSU_EXPR <_19>;
+src/magnitude.cpp:18:17: note: 	children 0x12fe0008
+src/magnitude.cpp:18:17: note: node (external) 0x12fe0008 (max_nunits=1, refcnt=1) vector(2) short int
+src/magnitude.cpp:18:17: note: 	{ _14, _19 }
+src/magnitude.cpp:18:17: note: Cost model analysis: 
+src/magnitude.cpp:18:17: note: Cost model analysis for part in loop 2:
+  Vector cost: 13
+  Scalar cost: 5
+src/magnitude.cpp:18:17: missed: not vectorized: vectorization is not profitable.
+src/magnitude.cpp:18:17: note: ***** Re-trying analysis with vector mode V2QI
+src/magnitude.cpp:18:17: note: ***** Analysis succeeded with vector mode V2QI
+src/magnitude.cpp:18:17: note: SLPing BB part
+src/magnitude.cpp:18:17: note: Costing subgraph: 
+src/magnitude.cpp:18:17: note: node 0x12fdfe58 (max_nunits=2, refcnt=1) vector(2) int
+src/magnitude.cpp:18:17: note: op template: _16 = (int) _15;
+src/magnitude.cpp:18:17: note: 	stmt 0 _16 = (int) _15;
+src/magnitude.cpp:18:17: note: 	stmt 1 _21 = (int) _20;
+src/magnitude.cpp:18:17: note: 	children 0x12fdfee8
+src/magnitude.cpp:18:17: note: node 0x12fdfee8 (max_nunits=2, refcnt=1) vector(2) unsigned short
+src/magnitude.cpp:18:17: note: op template: _15 = ABSU_EXPR <_14>;
+src/magnitude.cpp:18:17: note: 	stmt 0 _15 = ABSU_EXPR <_14>;
+src/magnitude.cpp:18:17: note: 	stmt 1 _20 = ABSU_EXPR <_19>;
+src/magnitude.cpp:18:17: note: 	children 0x12fdff78
+src/magnitude.cpp:18:17: note: node (external) 0x12fdff78 (max_nunits=1, refcnt=1) vector(2) short int
+src/magnitude.cpp:18:17: note: 	{ _14, _19 }
+src/magnitude.cpp:18:17: note: Cost model analysis: 
+src/magnitude.cpp:18:17: note: Cost model analysis for part in loop 2:
+  Vector cost: 13
+  Scalar cost: 5
+src/magnitude.cpp:18:17: missed: not vectorized: vectorization is not profitable.
+src/magnitude.cpp:18:17: note: ***** Re-trying analysis with vector mode V1QI
+src/magnitude.cpp:18:17: note: ***** Analysis succeeded with vector mode V1QI
+src/magnitude.cpp:18:17: note: SLPing BB part
+src/magnitude.cpp:18:17: note: Costing subgraph: 
+src/magnitude.cpp:18:17: note: node 0x12fdfe58 (max_nunits=1, refcnt=1) vector(1) int
+src/magnitude.cpp:18:17: note: op template: _16 = (int) _15;
+src/magnitude.cpp:18:17: note: 	stmt 0 _16 = (int) _15;
+src/magnitude.cpp:18:17: note: 	stmt 1 _21 = (int) _20;
+src/magnitude.cpp:18:17: note: 	children 0x12fdfee8
+src/magnitude.cpp:18:17: note: node 0x12fdfee8 (max_nunits=1, refcnt=1) vector(1) unsigned short
+src/magnitude.cpp:18:17: note: op template: _15 = ABSU_EXPR <_14>;
+src/magnitude.cpp:18:17: note: 	stmt 0 _15 = ABSU_EXPR <_14>;
+src/magnitude.cpp:18:17: note: 	stmt 1 _20 = ABSU_EXPR <_19>;
+src/magnitude.cpp:18:17: note: 	children 0x12fe0008
+src/magnitude.cpp:18:17: note: node (external) 0x12fe0008 (max_nunits=1, refcnt=1) vector(1) short int
+src/magnitude.cpp:18:17: note: 	{ _14, _19 }
+src/magnitude.cpp:18:17: note: Cost model analysis: 
+src/magnitude.cpp:18:17: note: Cost model analysis for part in loop 2:
+  Vector cost: 13
+  Scalar cost: 5
+src/magnitude.cpp:18:17: missed: not vectorized: vectorization is not profitable.
+src/magnitude.cpp:37:23: missed: couldn't vectorize loop
+src/magnitude.cpp:37:23: missed: not vectorized: unsupported control flow in loop.
+src/magnitude.cpp:28:23: missed: couldn't vectorize loop
+src/magnitude.cpp:28:23: missed: not vectorized: unsupported control flow in loop.
+src/magnitude.cpp:23:6: note: vectorized 0 loops in function.
+/usr/riscv64-linux-gnu/include/c++/15/cmath:462:28: missed: statement clobbers memory: _55 = __builtin_sqrt (_46);
+/usr/riscv64-linux-gnu/include/c++/15/cmath:462:28: missed: statement clobbers memory: _59 = __builtin_sqrt (_48);
+src/magnitude.cpp:40:51: note: ***** Analysis failed with vector mode RVVM1HI
+src/magnitude.cpp:40:51: note: ***** The result for vector mode RVVM1QI would be the same
+src/magnitude.cpp:40:51: note: ***** Re-trying analysis with vector mode RVVMF2QI
+src/magnitude.cpp:40:51: note: ***** Analysis failed with vector mode RVVMF2QI
+src/magnitude.cpp:40:51: note: ***** Re-trying analysis with vector mode RVVMF4QI
+src/magnitude.cpp:40:51: note: ***** Analysis failed with vector mode RVVMF4QI
+src/magnitude.cpp:40:51: note: ***** Re-trying analysis with vector mode RVVMF8QI
+src/magnitude.cpp:40:51: note: ***** Analysis failed with vector mode RVVMF8QI
+src/magnitude.cpp:40:51: note: ***** Re-trying analysis with vector mode V16QI
+src/magnitude.cpp:40:51: note: ***** Analysis succeeded with vector mode V16QI
+src/magnitude.cpp:40:51: note: SLPing BB part
+src/magnitude.cpp:31:51: note: Costing subgraph: 
+src/magnitude.cpp:31:51: note: node 0x13042f18 (max_nunits=2, refcnt=1) vector(2) int
+src/magnitude.cpp:31:51: note: op template: _7 = gx_42 * gx_42;
+src/magnitude.cpp:31:51: note: 	stmt 0 _7 = gx_42 * gx_42;
+src/magnitude.cpp:31:51: note: 	stmt 1 _8 = gy_43 * gy_43;
+src/magnitude.cpp:31:51: note: 	children 0x13042fa8 0x13042fa8
+src/magnitude.cpp:31:51: note: node 0x13042fa8 (max_nunits=2, refcnt=2) vector(2) int
+src/magnitude.cpp:31:51: note: op template: gx_42 = (int32_t) _4;
+src/magnitude.cpp:31:51: note: 	stmt 0 gx_42 = (int32_t) _4;
+src/magnitude.cpp:31:51: note: 	stmt 1 gy_43 = (int32_t) _6;
+src/magnitude.cpp:31:51: note: 	children 0x13043038
+src/magnitude.cpp:31:51: note: node (external) 0x13043038 (max_nunits=1, refcnt=1) vector(2) short int
+src/magnitude.cpp:31:51: note: 	{ _4, _6 }
+src/magnitude.cpp:31:51: note: Cost model analysis: 
+src/magnitude.cpp:31:51: note: Cost model analysis for part in loop 1:
+  Vector cost: 13
+  Scalar cost: 5
+src/magnitude.cpp:31:51: missed: not vectorized: vectorization is not profitable.
+src/magnitude.cpp:40:51: note: Costing subgraph: 
+src/magnitude.cpp:40:51: note: node 0x13043158 (max_nunits=2, refcnt=1) vector(2) int
+src/magnitude.cpp:40:51: note: op template: _17 = gx_35 * gx_35;
+src/magnitude.cpp:40:51: note: 	stmt 0 _17 = gx_35 * gx_35;
+src/magnitude.cpp:40:51: note: 	stmt 1 _18 = gy_37 * gy_37;
+src/magnitude.cpp:40:51: note: 	children 0x130431e8 0x130431e8
+src/magnitude.cpp:40:51: note: node 0x130431e8 (max_nunits=2, refcnt=2) vector(2) int
+src/magnitude.cpp:40:51: note: op template: gx_35 = (int32_t) _13;
+src/magnitude.cpp:40:51: note: 	stmt 0 gx_35 = (int32_t) _13;
+src/magnitude.cpp:40:51: note: 	stmt 1 gy_37 = (int32_t) _16;
+src/magnitude.cpp:40:51: note: 	children 0x13043308
+src/magnitude.cpp:40:51: note: node (external) 0x13043308 (max_nunits=1, refcnt=1) vector(2) short int
+src/magnitude.cpp:40:51: note: 	{ _13, _16 }
+src/magnitude.cpp:40:51: note: Cost model analysis: 
+src/magnitude.cpp:40:51: note: Cost model analysis for part in loop 2:
+  Vector cost: 13
+  Scalar cost: 5
+src/magnitude.cpp:40:51: missed: not vectorized: vectorization is not profitable.
+src/magnitude.cpp:40:51: note: ***** Re-trying analysis with vector mode V8QI
+src/magnitude.cpp:40:51: note: ***** Analysis succeeded with vector mode V8QI
+src/magnitude.cpp:40:51: note: SLPing BB part
+src/magnitude.cpp:31:51: note: Costing subgraph: 
+src/magnitude.cpp:31:51: note: node 0x13043158 (max_nunits=2, refcnt=1) vector(2) int
+src/magnitude.cpp:31:51: note: op template: _7 = gx_42 * gx_42;
+src/magnitude.cpp:31:51: note: 	stmt 0 _7 = gx_42 * gx_42;
+src/magnitude.cpp:31:51: note: 	stmt 1 _8 = gy_43 * gy_43;
+src/magnitude.cpp:31:51: note: 	children 0x130431e8 0x130431e8
+src/magnitude.cpp:31:51: note: node 0x130431e8 (max_nunits=2, refcnt=2) vector(2) int
+src/magnitude.cpp:31:51: note: op template: gx_42 = (int32_t) _4;
+src/magnitude.cpp:31:51: note: 	stmt 0 gx_42 = (int32_t) _4;
+src/magnitude.cpp:31:51: note: 	stmt 1 gy_43 = (int32_t) _6;
+src/magnitude.cpp:31:51: note: 	children 0x13042f18
+src/magnitude.cpp:31:51: note: node (external) 0x13042f18 (max_nunits=1, refcnt=1) vector(2) short int
+src/magnitude.cpp:31:51: note: 	{ _4, _6 }
+src/magnitude.cpp:31:51: note: Cost model analysis: 
+src/magnitude.cpp:31:51: note: Cost model analysis for part in loop 1:
+  Vector cost: 13
+  Scalar cost: 5
+src/magnitude.cpp:31:51: missed: not vectorized: vectorization is not profitable.
+src/magnitude.cpp:40:51: note: Costing subgraph: 
+src/magnitude.cpp:40:51: note: node 0x13043038 (max_nunits=2, refcnt=1) vector(2) int
+src/magnitude.cpp:40:51: note: op template: _17 = gx_35 * gx_35;
+src/magnitude.cpp:40:51: note: 	stmt 0 _17 = gx_35 * gx_35;
+src/magnitude.cpp:40:51: note: 	stmt 1 _18 = gy_37 * gy_37;
+src/magnitude.cpp:40:51: note: 	children 0x13042e88 0x13042e88
+src/magnitude.cpp:40:51: note: node 0x13042e88 (max_nunits=2, refcnt=2) vector(2) int
+src/magnitude.cpp:40:51: note: op template: gx_35 = (int32_t) _13;
+src/magnitude.cpp:40:51: note: 	stmt 0 gx_35 = (int32_t) _13;
+src/magnitude.cpp:40:51: note: 	stmt 1 gy_37 = (int32_t) _16;
+src/magnitude.cpp:40:51: note: 	children 0x13043278
+src/magnitude.cpp:40:51: note: node (external) 0x13043278 (max_nunits=1, refcnt=1) vector(2) short int
+src/magnitude.cpp:40:51: note: 	{ _13, _16 }
+src/magnitude.cpp:40:51: note: Cost model analysis: 
+src/magnitude.cpp:40:51: note: Cost model analysis for part in loop 2:
+  Vector cost: 13
+  Scalar cost: 5
+src/magnitude.cpp:40:51: missed: not vectorized: vectorization is not profitable.
+src/magnitude.cpp:40:51: note: ***** Re-trying analysis with vector mode V4QI
+src/magnitude.cpp:40:51: note: ***** Analysis succeeded with vector mode V4QI
+src/magnitude.cpp:40:51: note: SLPing BB part
+src/magnitude.cpp:31:51: note: Costing subgraph: 
+src/magnitude.cpp:31:51: note: node 0x13043038 (max_nunits=2, refcnt=1) vector(2) int
+src/magnitude.cpp:31:51: note: op template: _7 = gx_42 * gx_42;
+src/magnitude.cpp:31:51: note: 	stmt 0 _7 = gx_42 * gx_42;
+src/magnitude.cpp:31:51: note: 	stmt 1 _8 = gy_43 * gy_43;
+src/magnitude.cpp:31:51: note: 	children 0x13042e88 0x13042e88
+src/magnitude.cpp:31:51: note: node 0x13042e88 (max_nunits=2, refcnt=2) vector(2) int
+src/magnitude.cpp:31:51: note: op template: gx_42 = (int32_t) _4;
+src/magnitude.cpp:31:51: note: 	stmt 0 gx_42 = (int32_t) _4;
+src/magnitude.cpp:31:51: note: 	stmt 1 gy_43 = (int32_t) _6;
+src/magnitude.cpp:31:51: note: 	children 0x13043158
+src/magnitude.cpp:31:51: note: node (external) 0x13043158 (max_nunits=1, refcnt=1) vector(2) short int
+src/magnitude.cpp:31:51: note: 	{ _4, _6 }
+src/magnitude.cpp:31:51: note: Cost model analysis: 
+src/magnitude.cpp:31:51: note: Cost model analysis for part in loop 1:
+  Vector cost: 13
+  Scalar cost: 5
+src/magnitude.cpp:31:51: missed: not vectorized: vectorization is not profitable.
+src/magnitude.cpp:40:51: note: Costing subgraph: 
+src/magnitude.cpp:40:51: note: node 0x13042f18 (max_nunits=2, refcnt=1) vector(2) int
+src/magnitude.cpp:40:51: note: op template: _17 = gx_35 * gx_35;
+src/magnitude.cpp:40:51: note: 	stmt 0 _17 = gx_35 * gx_35;
+src/magnitude.cpp:40:51: note: 	stmt 1 _18 = gy_37 * gy_37;
+src/magnitude.cpp:40:51: note: 	children 0x13043308 0x13043308
+src/magnitude.cpp:40:51: note: node 0x13043308 (max_nunits=2, refcnt=2) vector(2) int
+src/magnitude.cpp:40:51: note: op template: gx_35 = (int32_t) _13;
+src/magnitude.cpp:40:51: note: 	stmt 0 gx_35 = (int32_t) _13;
+src/magnitude.cpp:40:51: note: 	stmt 1 gy_37 = (int32_t) _16;
+src/magnitude.cpp:40:51: note: 	children 0x130430c8
+src/magnitude.cpp:40:51: note: node (external) 0x130430c8 (max_nunits=1, refcnt=1) vector(2) short int
+src/magnitude.cpp:40:51: note: 	{ _13, _16 }
+src/magnitude.cpp:40:51: note: Cost model analysis: 
+src/magnitude.cpp:40:51: note: Cost model analysis for part in loop 2:
+  Vector cost: 13
+  Scalar cost: 5
+src/magnitude.cpp:40:51: missed: not vectorized: vectorization is not profitable.
+src/magnitude.cpp:40:51: note: ***** Re-trying analysis with vector mode V2QI
+src/magnitude.cpp:40:51: note: ***** Analysis succeeded with vector mode V2QI
+src/magnitude.cpp:40:51: note: SLPing BB part
+src/magnitude.cpp:31:51: note: Costing subgraph: 
+src/magnitude.cpp:31:51: note: node 0x13042f18 (max_nunits=2, refcnt=1) vector(2) int
+src/magnitude.cpp:31:51: note: op template: _7 = gx_42 * gx_42;
+src/magnitude.cpp:31:51: note: 	stmt 0 _7 = gx_42 * gx_42;
+src/magnitude.cpp:31:51: note: 	stmt 1 _8 = gy_43 * gy_43;
+src/magnitude.cpp:31:51: note: 	children 0x13043308 0x13043308
+src/magnitude.cpp:31:51: note: node 0x13043308 (max_nunits=2, refcnt=2) vector(2) int
+src/magnitude.cpp:31:51: note: op template: gx_42 = (int32_t) _4;
+src/magnitude.cpp:31:51: note: 	stmt 0 gx_42 = (int32_t) _4;
+src/magnitude.cpp:31:51: note: 	stmt 1 gy_43 = (int32_t) _6;
+src/magnitude.cpp:31:51: note: 	children 0x13043038
+src/magnitude.cpp:31:51: note: node (external) 0x13043038 (max_nunits=1, refcnt=1) vector(2) short int
+src/magnitude.cpp:31:51: note: 	{ _4, _6 }
+src/magnitude.cpp:31:51: note: Cost model analysis: 
+src/magnitude.cpp:31:51: note: Cost model analysis for part in loop 1:
+  Vector cost: 13
+  Scalar cost: 5
+src/magnitude.cpp:31:51: missed: not vectorized: vectorization is not profitable.
+src/magnitude.cpp:40:51: note: Costing subgraph: 
+src/magnitude.cpp:40:51: note: node 0x13043158 (max_nunits=2, refcnt=1) vector(2) int
+src/magnitude.cpp:40:51: note: op template: _17 = gx_35 * gx_35;
+src/magnitude.cpp:40:51: note: 	stmt 0 _17 = gx_35 * gx_35;
+src/magnitude.cpp:40:51: note: 	stmt 1 _18 = gy_37 * gy_37;
+src/magnitude.cpp:40:51: note: 	children 0x13043278 0x13043278
+src/magnitude.cpp:40:51: note: node 0x13043278 (max_nunits=2, refcnt=2) vector(2) int
+src/magnitude.cpp:40:51: note: op template: gx_35 = (int32_t) _13;
+src/magnitude.cpp:40:51: note: 	stmt 0 gx_35 = (int32_t) _13;
+src/magnitude.cpp:40:51: note: 	stmt 1 gy_37 = (int32_t) _16;
+src/magnitude.cpp:40:51: note: 	children 0x13042fa8
+src/magnitude.cpp:40:51: note: node (external) 0x13042fa8 (max_nunits=1, refcnt=1) vector(2) short int
+src/magnitude.cpp:40:51: note: 	{ _13, _16 }
+src/magnitude.cpp:40:51: note: Cost model analysis: 
+src/magnitude.cpp:40:51: note: Cost model analysis for part in loop 2:
+  Vector cost: 13
+  Scalar cost: 5
+src/magnitude.cpp:40:51: missed: not vectorized: vectorization is not profitable.
+src/magnitude.cpp:40:51: note: ***** Re-trying analysis with vector mode V1QI
+src/magnitude.cpp:40:51: note: ***** Analysis succeeded with vector mode V1QI
+src/magnitude.cpp:40:51: note: SLPing BB part
+src/magnitude.cpp:31:51: note: Costing subgraph: 
+src/magnitude.cpp:31:51: note: node 0x13043158 (max_nunits=1, refcnt=1) vector(1) int
+src/magnitude.cpp:31:51: note: op template: _7 = gx_42 * gx_42;
+src/magnitude.cpp:31:51: note: 	stmt 0 _7 = gx_42 * gx_42;
+src/magnitude.cpp:31:51: note: 	stmt 1 _8 = gy_43 * gy_43;
+src/magnitude.cpp:31:51: note: 	children 0x13043278 0x13043278
+src/magnitude.cpp:31:51: note: node 0x13043278 (max_nunits=1, refcnt=2) vector(1) int
+src/magnitude.cpp:31:51: note: op template: gx_42 = (int32_t) _4;
+src/magnitude.cpp:31:51: note: 	stmt 0 gx_42 = (int32_t) _4;
+src/magnitude.cpp:31:51: note: 	stmt 1 gy_43 = (int32_t) _6;
+src/magnitude.cpp:31:51: note: 	children 0x13042f18
+src/magnitude.cpp:31:51: note: node (external) 0x13042f18 (max_nunits=1, refcnt=1) vector(1) short int
+src/magnitude.cpp:31:51: note: 	{ _4, _6 }
+src/magnitude.cpp:31:51: note: Cost model analysis: 
+src/magnitude.cpp:31:51: note: Cost model analysis for part in loop 1:
+  Vector cost: 13
+  Scalar cost: 5
+src/magnitude.cpp:31:51: missed: not vectorized: vectorization is not profitable.
+src/magnitude.cpp:40:51: note: Costing subgraph: 
+src/magnitude.cpp:40:51: note: node 0x13043038 (max_nunits=1, refcnt=1) vector(1) int
+src/magnitude.cpp:40:51: note: op template: _17 = gx_35 * gx_35;
+src/magnitude.cpp:40:51: note: 	stmt 0 _17 = gx_35 * gx_35;
+src/magnitude.cpp:40:51: note: 	stmt 1 _18 = gy_37 * gy_37;
+src/magnitude.cpp:40:51: note: 	children 0x130430c8 0x130430c8
+src/magnitude.cpp:40:51: note: node 0x130430c8 (max_nunits=1, refcnt=2) vector(1) int
+src/magnitude.cpp:40:51: note: op template: gx_35 = (int32_t) _13;
+src/magnitude.cpp:40:51: note: 	stmt 0 gx_35 = (int32_t) _13;
+src/magnitude.cpp:40:51: note: 	stmt 1 gy_37 = (int32_t) _16;
+src/magnitude.cpp:40:51: note: 	children 0x130431e8
+src/magnitude.cpp:40:51: note: node (external) 0x130431e8 (max_nunits=1, refcnt=1) vector(1) short int
+src/magnitude.cpp:40:51: note: 	{ _13, _16 }
+src/magnitude.cpp:40:51: note: Cost model analysis: 
+src/magnitude.cpp:40:51: note: Cost model analysis for part in loop 2:
+  Vector cost: 13
+  Scalar cost: 5
+src/magnitude.cpp:40:51: missed: not vectorized: vectorization is not profitable.
+src/direction.cpp:7:23: missed: couldn't vectorize loop
+src/direction.cpp:7:23: missed: not vectorized: unsupported data-type
+src/direction.cpp:4:6: note: ***** Analysis failed with vector mode RVVM1HI
+src/direction.cpp:4:6: note: ***** The result for vector mode RVVM1QI would be the same
+src/direction.cpp:4:6: note: ***** Re-trying analysis with vector mode RVVMF2QI
+src/direction.cpp:4:6: note: ***** Analysis failed with vector mode RVVMF2QI
+src/direction.cpp:4:6: note: ***** Re-trying analysis with vector mode RVVMF4QI
+src/direction.cpp:4:6: note: ***** Analysis failed with vector mode RVVMF4QI
+src/direction.cpp:4:6: note: ***** Re-trying analysis with vector mode RVVMF8QI
+src/direction.cpp:4:6: note: ***** Analysis failed with vector mode RVVMF8QI
+src/direction.cpp:4:6: note: ***** Re-trying analysis with vector mode V16QI
+src/direction.cpp:4:6: note: ***** Analysis failed with vector mode V16QI
+src/direction.cpp:4:6: note: ***** Re-trying analysis with vector mode V8QI
+src/direction.cpp:4:6: note: ***** Analysis failed with vector mode V8QI
+src/direction.cpp:4:6: note: ***** Re-trying analysis with vector mode V4QI
+src/direction.cpp:4:6: note: ***** Analysis failed with vector mode V4QI
+src/direction.cpp:4:6: note: ***** Re-trying analysis with vector mode V2QI
+src/direction.cpp:4:6: note: ***** Analysis failed with vector mode V2QI
+src/direction.cpp:4:6: note: ***** Re-trying analysis with vector mode V1QI
+src/direction.cpp:4:6: note: ***** Analysis failed with vector mode V1QI
+src/direction.cpp:4:6: note: vectorized 0 loops in function.
+src/direction.cpp:4:6: note: ***** Analysis failed with vector mode RVVM1HI
+src/direction.cpp:4:6: note: ***** The result for vector mode RVVM1QI would be the same
+src/direction.cpp:4:6: note: ***** Re-trying analysis with vector mode RVVMF2QI
+src/direction.cpp:4:6: note: ***** Analysis failed with vector mode RVVMF2QI
+src/direction.cpp:4:6: note: ***** Re-trying analysis with vector mode RVVMF4QI
+src/direction.cpp:4:6: note: ***** Analysis failed with vector mode RVVMF4QI
+src/direction.cpp:4:6: note: ***** Re-trying analysis with vector mode RVVMF8QI
+src/direction.cpp:4:6: note: ***** Analysis failed with vector mode RVVMF8QI
+src/direction.cpp:4:6: note: ***** Re-trying analysis with vector mode V16QI
+src/direction.cpp:4:6: note: ***** Analysis failed with vector mode V16QI
+src/direction.cpp:4:6: note: ***** Re-trying analysis with vector mode V8QI
+src/direction.cpp:4:6: note: ***** Analysis failed with vector mode V8QI
+src/direction.cpp:4:6: note: ***** Re-trying analysis with vector mode V4QI
+src/direction.cpp:4:6: note: ***** Analysis failed with vector mode V4QI
+src/direction.cpp:4:6: note: ***** Re-trying analysis with vector mode V2QI
+src/direction.cpp:4:6: note: ***** Analysis failed with vector mode V2QI
+src/direction.cpp:4:6: note: ***** Re-trying analysis with vector mode V1QI
+src/direction.cpp:4:6: note: ***** Analysis failed with vector mode V1QI
+src/nms.cpp:33:23: missed: couldn't vectorize loop
+src/nms.cpp:33:23: missed: not vectorized: unsupported control flow in loop.
+src/nms.cpp:34:27: missed: couldn't vectorize loop
+src/nms.cpp:34:27: missed: not vectorized: unsupported control flow in loop.
+src/nms.cpp:24:6: note: vectorized 0 loops in function.
+/usr/riscv64-linux-gnu/include/bits/string_fortified.h:59:33: missed: statement clobbers memory: __builtin_memset (out_64(D), 0, _3);
+src/nms.cpp:24:6: note: ***** Analysis failed with vector mode RVVM1QI
+src/nms.cpp:24:6: note: ***** The result for vector mode RVVM1QI would be the same
+src/nms.cpp:24:6: note: ***** Re-trying analysis with vector mode RVVMF2QI
+src/nms.cpp:24:6: note: ***** Analysis failed with vector mode RVVMF2QI
+src/nms.cpp:24:6: note: ***** Re-trying analysis with vector mode RVVMF4QI
+src/nms.cpp:24:6: note: ***** Analysis failed with vector mode RVVMF4QI
+src/nms.cpp:24:6: note: ***** Re-trying analysis with vector mode RVVMF8QI
+src/nms.cpp:24:6: note: ***** Analysis failed with vector mode RVVMF8QI
+src/nms.cpp:24:6: note: ***** Re-trying analysis with vector mode V16QI
+src/nms.cpp:24:6: note: ***** Analysis failed with vector mode V16QI
+src/nms.cpp:24:6: note: ***** Re-trying analysis with vector mode V8QI
+src/nms.cpp:24:6: note: ***** Analysis failed with vector mode V8QI
+src/nms.cpp:24:6: note: ***** Re-trying analysis with vector mode V4QI
+src/nms.cpp:24:6: note: ***** Analysis failed with vector mode V4QI
+src/nms.cpp:24:6: note: ***** Re-trying analysis with vector mode V2QI
+src/nms.cpp:24:6: note: ***** Analysis failed with vector mode V2QI
+src/nms.cpp:24:6: note: ***** Re-trying analysis with vector mode V1QI
+src/nms.cpp:24:6: note: ***** Analysis succeeded with vector mode V1QI
+src/nms.cpp:24:6: note: SLPing BB part
+src/nms.cpp:24:6: note: Costing subgraph: 
+src/nms.cpp:24:6: note: node 0x9f6c788 (max_nunits=1, refcnt=1) const vector(1) unsigned char
+src/nms.cpp:24:6: note: op template: neighbor1_78 = *_11;
+src/nms.cpp:24:6: note: 	stmt 0 neighbor1_78 = *_11;
+src/nms.cpp:24:6: note: 	stmt 1 neighbor2_79 = *_15;
+src/nms.cpp:24:6: note: 	load permutation { 0 2 }
+src/nms.cpp:24:6: note: Cost model analysis: 
+src/nms.cpp:24:6: note: Cost model analysis for part in loop 2:
+  Vector cost: 9
+  Scalar cost: 3
+src/nms.cpp:24:6: missed: not vectorized: vectorization is not profitable.
+src/threshold.cpp:24:23: optimized: loop vectorized using variable length vectors
+src/threshold.cpp:17:6: note: vectorized 1 loops in function.
+src/threshold.cpp:25:23: missed: statement clobbers memory: vect_m_14.10_42 = .MASK_LEN_LOAD (vectp_mag.8_4, 8B, { -1, ... }, _41(D), _56, 0);
+src/threshold.cpp:27:20: missed: statement clobbers memory: .MASK_LEN_STORE (vectp_out.15_50, 8B, { -1, ... }, _56, 0, vect__26.14_48);
+src/threshold.cpp:34:1: note: ***** Analysis failed with vector mode VOID
+src/threshold.cpp:99:23: optimized: loop vectorized using variable length vectors
+src/threshold.cpp:66:27: missed: couldn't vectorize loop
+src/threshold.cpp:66:27: missed: not vectorized: could not determine main exit from loop with multiple exits.
+src/threshold.cpp:66:27: missed: couldn't vectorize loop
+src/threshold.cpp:66:27: missed: not vectorized: unsupported control flow in loop.
+src/threshold.cpp:67:31: missed: couldn't vectorize loop
+src/threshold.cpp:67:31: missed: not vectorized: unsupported control flow in loop.
+src/threshold.cpp:76:43: missed: couldn't vectorize loop
+src/threshold.cpp:76:43: missed: not vectorized: unsupported control flow in loop.
+src/threshold.cpp:77:42: missed: couldn't vectorize loop
+src/threshold.cpp:77:42: missed: not vectorized: unsupported control flow in loop.
+src/threshold.cpp:56:6: note: vectorized 1 loops in function.
+src/threshold.cpp:100:18: missed: statement clobbers memory: vect__18.32_56 = .MASK_LEN_LOAD (vectp_img.30_59, 8B, { -1, ... }, _54(D), _93, 0);
+src/threshold.cpp:101:20: missed: statement clobbers memory: .MASK_LEN_STORE (vectp_img.34_87, 8B, mask__23.33_53, _93, 0, { 0, ... });
+src/threshold.cpp:82:40: note: ***** Analysis failed with vector mode RVVM1QI
+src/threshold.cpp:82:40: note: ***** The result for vector mode RVVM1QI would be the same
+src/threshold.cpp:82:40: note: ***** Re-trying analysis with vector mode RVVMF2QI
+src/threshold.cpp:82:40: note: ***** Analysis failed with vector mode RVVMF2QI
+src/threshold.cpp:82:40: note: ***** Re-trying analysis with vector mode RVVMF4QI
+src/threshold.cpp:82:40: note: ***** Analysis failed with vector mode RVVMF4QI
+src/threshold.cpp:82:40: note: ***** Re-trying analysis with vector mode RVVMF8QI
+src/threshold.cpp:82:40: note: ***** Analysis failed with vector mode RVVMF8QI
+src/threshold.cpp:82:40: note: ***** Re-trying analysis with vector mode V16QI
+src/threshold.cpp:80:35: note: ***** Analysis succeeded with vector mode V16QI
+src/threshold.cpp:80:35: note: SLPing BB part
+src/threshold.cpp:80:35: note: Costing subgraph: 
+src/threshold.cpp:80:35: note: node 0xb7db4a8 (max_nunits=2, refcnt=1) vector(2) unsigned int
+src/threshold.cpp:80:35: note: op template: _13 = (unsigned int) dy_76;
+src/threshold.cpp:80:35: note: 	stmt 0 _13 = (unsigned int) dy_76;
+src/threshold.cpp:80:35: note: 	stmt 1 _28 = (unsigned int) y_73;
+src/threshold.cpp:80:35: note: 	children 0xb7db5c8
+src/threshold.cpp:80:35: note: node (external) 0xb7db5c8 (max_nunits=1, refcnt=1) vector(2) int
+src/threshold.cpp:80:35: note: 	{ dy_76, y_73 }
+src/threshold.cpp:80:35: note: Cost model analysis: 
+src/threshold.cpp:80:35: note: Cost model analysis for part in loop 5:
+  Vector cost: 11
+  Scalar cost: 1
+src/threshold.cpp:80:35: missed: not vectorized: vectorization is not profitable.
+src/threshold.cpp:80:35: note: ***** Re-trying analysis with vector mode V8QI
+src/threshold.cpp:80:35: note: ***** Analysis succeeded with vector mode V8QI
+src/threshold.cpp:80:35: note: SLPing BB part
+src/threshold.cpp:80:35: note: Costing subgraph: 
+src/threshold.cpp:80:35: note: node 0xb7db5c8 (max_nunits=2, refcnt=1) vector(2) unsigned int
+src/threshold.cpp:80:35: note: op template: _13 = (unsigned int) dy_76;
+src/threshold.cpp:80:35: note: 	stmt 0 _13 = (unsigned int) dy_76;
+src/threshold.cpp:80:35: note: 	stmt 1 _28 = (unsigned int) y_73;
+src/threshold.cpp:80:35: note: 	children 0xb7db6e8
+src/threshold.cpp:80:35: note: node (external) 0xb7db6e8 (max_nunits=1, refcnt=1) vector(2) int
+src/threshold.cpp:80:35: note: 	{ dy_76, y_73 }
+src/threshold.cpp:80:35: note: Cost model analysis: 
+src/threshold.cpp:80:35: note: Cost model analysis for part in loop 5:
+  Vector cost: 11
+  Scalar cost: 1
+src/threshold.cpp:80:35: missed: not vectorized: vectorization is not profitable.
+src/threshold.cpp:80:35: note: ***** Re-trying analysis with vector mode V4QI
+src/threshold.cpp:80:35: note: ***** Analysis succeeded with vector mode V4QI
+src/threshold.cpp:80:35: note: SLPing BB part
+src/threshold.cpp:80:35: note: Costing subgraph: 
+src/threshold.cpp:80:35: note: node 0xb7db6e8 (max_nunits=2, refcnt=1) vector(2) unsigned int
+src/threshold.cpp:80:35: note: op template: _13 = (unsigned int) dy_76;
+src/threshold.cpp:80:35: note: 	stmt 0 _13 = (unsigned int) dy_76;
+src/threshold.cpp:80:35: note: 	stmt 1 _28 = (unsigned int) y_73;
+src/threshold.cpp:80:35: note: 	children 0xb7db538
+src/threshold.cpp:80:35: note: node (external) 0xb7db538 (max_nunits=1, refcnt=1) vector(2) int
+src/threshold.cpp:80:35: note: 	{ dy_76, y_73 }
+src/threshold.cpp:80:35: note: Cost model analysis: 
+src/threshold.cpp:80:35: note: Cost model analysis for part in loop 5:
+  Vector cost: 11
+  Scalar cost: 1
+src/threshold.cpp:80:35: missed: not vectorized: vectorization is not profitable.
+src/threshold.cpp:80:35: note: ***** Re-trying analysis with vector mode V2QI
+src/threshold.cpp:80:35: note: ***** Analysis succeeded with vector mode V2QI
+src/threshold.cpp:80:35: note: SLPing BB part
+src/threshold.cpp:80:35: note: Costing subgraph: 
+src/threshold.cpp:80:35: note: node 0xb7db538 (max_nunits=2, refcnt=1) vector(2) unsigned int
+src/threshold.cpp:80:35: note: op template: _13 = (unsigned int) dy_76;
+src/threshold.cpp:80:35: note: 	stmt 0 _13 = (unsigned int) dy_76;
+src/threshold.cpp:80:35: note: 	stmt 1 _28 = (unsigned int) y_73;
+src/threshold.cpp:80:35: note: 	children 0xb7db658
+src/threshold.cpp:80:35: note: node (external) 0xb7db658 (max_nunits=1, refcnt=1) vector(2) int
+src/threshold.cpp:80:35: note: 	{ dy_76, y_73 }
+src/threshold.cpp:80:35: note: Cost model analysis: 
+src/threshold.cpp:80:35: note: Cost model analysis for part in loop 5:
+  Vector cost: 11
+  Scalar cost: 1
+src/threshold.cpp:80:35: missed: not vectorized: vectorization is not profitable.
+src/threshold.cpp:80:35: note: ***** Re-trying analysis with vector mode V1QI
+src/threshold.cpp:82:40: note: ***** Analysis failed with vector mode V1QI
+src/main.cpp:35:18: missed: statement clobbers memory: clock_gettime (1, &t);
+src/main.cpp:36:44: note: ***** Analysis failed with vector mode RVVM1DI
+src/main.cpp:36:44: note: ***** Skipping vector mode RVVM1QI, which would repeat the analysis for RVVM1DI
+src/gaussian.h:16:23: missed: couldn't vectorize loop
+src/gaussian.h:16:23: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+src/gaussian.h:17:27: missed: couldn't vectorize loop
+src/gaussian.h:17:27: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+src/gaussian.h:19:33: missed: couldn't vectorize loop
+src/gaussian.h:25:39: missed: not vectorized: data ref analysis failed: _13 = .MASK_LOAD (_12, 8B, _33, 0);
+src/gaussian.h:20:37: optimized: loop vectorized using variable length vectors
+src/gaussian.h:15:6: note: vectorized 1 loops in function.
+src/gaussian.h:15:6: missed: splitting region at dont-vectorize loop 6 entry at bb34
+src/gaussian.h:32:19: note: ***** Analysis failed with vector mode VOID
+src/gaussian.h:32:19: missed: splitting region at loop 2 exit at bb28
+src/gaussian.h:17:27: note: ***** Analysis failed with vector mode RVVM1QI
+src/gaussian.h:17:27: note: ***** Skipping vector mode RVVM1QI, which would repeat the analysis for RVVM1QI
+src/gaussian.h:17:27: missed: splitting region at dominance boundary bb14
+src/gaussian.h:17:27: note: ***** Analysis failed with vector mode VOID
+src/gaussian.h:17:27: missed: splitting region at loop 1 exit at bb29
+src/gaussian.h:16:23: note: ***** Analysis failed with vector mode VOID
+src/gaussian.h:16:23: missed: splitting region at dominance boundary bb17
+src/gaussian.h:16:23: note: ***** Analysis failed with vector mode VOID
+src/gaussian.h:35:1: note: ***** Analysis failed with vector mode VOID
+src/main.cpp:181:23: missed: couldn't vectorize loop
+src/main.cpp:181:48: missed: statement clobbers memory: direction_rvv (Gx_rvv_153, Gy_rvv_155, _159, _227, _225);
+src/main.cpp:171:23: missed: couldn't vectorize loop
+src/main.cpp:171:51: missed: statement clobbers memory: magnitude_l1_rvv (Gx_rvv_153, Gy_rvv_155, _157, _227, _225);
+src/main.cpp:164:23: missed: couldn't vectorize loop
+src/main.cpp:164:44: missed: statement clobbers memory: sobel_rvv (_151, Gx_rvv_153, Gy_rvv_155, _227, _225);
+src/main.cpp:157:23: missed: couldn't vectorize loop
+src/main.cpp:157:51: missed: statement clobbers memory: gaussian_5x5_rvv (_99, _151, _227, _225);
+src/main.cpp:137:23: missed: couldn't vectorize loop
+src/threshold.h:52:21: missed: statement clobbers memory: double_threshold (_107, _115, _227, _225, low_thresh_69, high_thresh_70);
+src/main.cpp:127:27: optimized: loop vectorized using variable length vectors
+src/main.cpp:116:23: missed: couldn't vectorize loop
+src/main.cpp:116:58: missed: statement clobbers memory: non_maximum_suppression (_107, _111, _113, _227, _225);
+src/main.cpp:110:23: missed: couldn't vectorize loop
+src/main.cpp:110:44: missed: statement clobbers memory: direction (Gx_103, Gy_105, _111, _227, _225);
+src/main.cpp:105:23: missed: couldn't vectorize loop
+src/main.cpp:105:47: missed: statement clobbers memory: magnitude_l2 (Gx_103, Gy_105, _109, _227, _225);
+src/main.cpp:100:23: missed: couldn't vectorize loop
+src/main.cpp:100:47: missed: statement clobbers memory: magnitude_l1 (Gx_103, Gy_105, _107, _227, _225);
+src/main.cpp:95:23: missed: couldn't vectorize loop
+src/main.cpp:95:40: missed: statement clobbers memory: sobel (_101, Gx_103, Gy_105, _227, _225);
+src/main.cpp:90:23: missed: couldn't vectorize loop
+src/gaussian.h:38:44: missed: statement clobbers memory: gaussian_5x5<unsigned char, int, short int> (_99, _101, _227, _225);
+src/main.cpp:53:5: note: vectorized 1 loops in function.
+/usr/riscv64-linux-gnu/include/stdlib.h:487:23: missed: statement clobbers memory: _226 = strtol (_2, 0B, 10);
+/usr/riscv64-linux-gnu/include/stdlib.h:487:23: missed: statement clobbers memory: _224 = strtol (_4, 0B, 10);
+/usr/riscv64-linux-gnu/include/stdlib.h:487:23: missed: statement clobbers memory: _228 = strtol (_5, 0B, 10);
+/usr/riscv64-linux-gnu/include/stdlib.h:487:23: missed: statement clobbers memory: _230 = strtol (_6, 0B, 10);
+src/main.cpp:70:33: missed: statement clobbers memory: _99 = load_raw (in_path_96, _227, _225);
+src/main.cpp:71:36: missed: statement clobbers memory: _101 = alloc_image (_227, _225);
+src/main.cpp:72:48: missed: statement clobbers memory: Gx_103 = aligned_alloc (64, _9);
+src/main.cpp:73:48: missed: statement clobbers memory: Gy_105 = aligned_alloc (64, _9);
+src/main.cpp:74:36: missed: statement clobbers memory: _107 = alloc_image (_227, _225);
+src/main.cpp:75:36: missed: statement clobbers memory: _109 = alloc_image (_227, _225);
+src/main.cpp:76:36: missed: statement clobbers memory: _111 = alloc_image (_227, _225);
+src/main.cpp:77:36: missed: statement clobbers memory: _113 = alloc_image (_227, _225);
+src/main.cpp:78:36: missed: statement clobbers memory: _115 = alloc_image (_227, _225);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "=== Canny Edge Detection Pipeline ===\n");
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "Image: %dx%d\n", _227, _225);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "Thresholds: auto (low=5%% of max, high=15%% of max)\n");
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "Thresholds: low=%d, high=%d (user-specified)\n", user_low_thresh_3, user_high_thresh_62);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "\n");
+src/main.cpp:89:23: missed: statement clobbers memory: t1_117 = now_ms ();
+src/gaussian.h:38:44: missed: statement clobbers memory: gaussian_5x5<unsigned char, int, short int> (_99, _101, _227, _225);
+src/main.cpp:91:23: missed: statement clobbers memory: t2_119 = now_ms ();
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "[Scalar] Gaussian Blur:    %.3f ms\n", _14);
+src/main.cpp:94:23: missed: statement clobbers memory: t3_121 = now_ms ();
+src/main.cpp:95:40: missed: statement clobbers memory: sobel (_101, Gx_103, Gy_105, _227, _225);
+src/main.cpp:96:23: missed: statement clobbers memory: t4_123 = now_ms ();
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "[Scalar] Sobel Gradient:   %.3f ms\n", _16);
+src/main.cpp:99:23: missed: statement clobbers memory: t5_125 = now_ms ();
+src/main.cpp:100:47: missed: statement clobbers memory: magnitude_l1 (Gx_103, Gy_105, _107, _227, _225);
+src/main.cpp:101:23: missed: statement clobbers memory: t6_127 = now_ms ();
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "[Scalar] Magnitude L1:     %.3f ms\n", _18);
+src/main.cpp:104:23: missed: statement clobbers memory: t7_129 = now_ms ();
+src/main.cpp:105:47: missed: statement clobbers memory: magnitude_l2 (Gx_103, Gy_105, _109, _227, _225);
+src/main.cpp:106:23: missed: statement clobbers memory: t8_131 = now_ms ();
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "[Scalar] Magnitude L2:     %.3f ms\n", _20);
+src/main.cpp:109:23: missed: statement clobbers memory: t9_133 = now_ms ();
+src/main.cpp:110:44: missed: statement clobbers memory: direction (Gx_103, Gy_105, _111, _227, _225);
+src/main.cpp:111:24: missed: statement clobbers memory: t10_135 = now_ms ();
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "[Scalar] Direction:        %.3f ms\n", _22);
+src/main.cpp:115:27: missed: statement clobbers memory: t_nms1_137 = now_ms ();
+src/main.cpp:116:58: missed: statement clobbers memory: non_maximum_suppression (_107, _111, _113, _227, _225);
+src/main.cpp:117:27: missed: statement clobbers memory: t_nms2_139 = now_ms ();
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "[Scalar] NMS:              %.3f ms\n", _24);
+src/main.cpp:128:25: missed: statement clobbers memory: vect__27.100_64 = .MASK_LEN_LOAD (vectp.98_65, 8B, { -1, ... }, _81(D), _313, 0);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "[Auto]   max_mag=%d  high=%d  low=%d\n", _28, _32, _33);
+src/main.cpp:136:30: missed: statement clobbers memory: t_thresh1_146 = now_ms ();
+src/threshold.h:52:21: missed: statement clobbers memory: double_threshold (_107, _115, _227, _225, low_thresh_69, high_thresh_70);
+src/threshold.h:53:15: missed: statement clobbers memory: hysteresis (_115, _227, _225);
+src/main.cpp:139:30: missed: statement clobbers memory: t_thresh2_148 = now_ms ();
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "[Scalar] Thresholding:     %.3f ms\n", _35);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "\n[Scalar] Total pipeline:   %.3f ms\n", scalar_total_149);
+src/main.cpp:148:40: missed: statement clobbers memory: _151 = alloc_image (_227, _225);
+src/main.cpp:149:52: missed: statement clobbers memory: Gx_rvv_153 = aligned_alloc (64, _9);
+src/main.cpp:150:52: missed: statement clobbers memory: Gy_rvv_155 = aligned_alloc (64, _9);
+src/main.cpp:151:40: missed: statement clobbers memory: _157 = alloc_image (_227, _225);
+src/main.cpp:152:40: missed: statement clobbers memory: _159 = alloc_image (_227, _225);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "\n");
+src/main.cpp:156:23: missed: statement clobbers memory: r1_161 = now_ms ();
+src/main.cpp:157:51: missed: statement clobbers memory: gaussian_5x5_rvv (_99, _151, _227, _225);
+src/main.cpp:158:23: missed: statement clobbers memory: r2_163 = now_ms ();
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "[RVV  ] Gaussian Blur:    %.3f ms  (%.1fx speedup vs scalar)\n", rvv_gauss_164, _49);
+src/main.cpp:163:23: missed: statement clobbers memory: r3_166 = now_ms ();
+src/main.cpp:164:44: missed: statement clobbers memory: sobel_rvv (_151, Gx_rvv_153, Gy_rvv_155, _227, _225);
+src/main.cpp:165:23: missed: statement clobbers memory: r4_168 = now_ms ();
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "[RVV  ] Sobel Gradient:   %.3f ms  (%.1fx speedup vs scalar)\n", rvv_sobel_169, _51);
+src/main.cpp:170:23: missed: statement clobbers memory: r5_171 = now_ms ();
+src/main.cpp:171:51: missed: statement clobbers memory: magnitude_l1_rvv (Gx_rvv_153, Gy_rvv_155, _157, _227, _225);
+src/main.cpp:172:23: missed: statement clobbers memory: r6_173 = now_ms ();
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "[RVV  ] Magnitude L1:     %.3f ms  (%.1fx speedup vs scalar)\n", rvv_mag_174, _53);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "[RVV  ] Magnitude L2:     scalar only\n");
+src/main.cpp:180:27: missed: statement clobbers memory: r_dir1_176 = now_ms ();
+src/main.cpp:181:48: missed: statement clobbers memory: direction_rvv (Gx_rvv_153, Gy_rvv_155, _159, _227, _225);
+src/main.cpp:182:27: missed: statement clobbers memory: r_dir2_178 = now_ms ();
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "[RVV  ] Direction:        %.3f ms  (%.1fx speedup vs scalar)\n", rvv_dir_179, _55);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "[RVV  ] NMS:              scalar only (bonus stage)\n");
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "[RVV  ] Thresholding:     scalar only (bonus stage)\n");
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "\n[RVV  ] Total pipeline:   %.3f ms  (%.1fx speedup vs scalar)\n", rvv_total_180, _61);
+src/main.cpp:197:9: missed: statement clobbers memory: free (_151);
+src/main.cpp:198:9: missed: statement clobbers memory: free (Gx_rvv_153);
+src/main.cpp:199:9: missed: statement clobbers memory: free (Gy_rvv_155);
+src/main.cpp:200:9: missed: statement clobbers memory: free (_157);
+src/main.cpp:201:9: missed: statement clobbers memory: free (_159);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:68:35: missed: statement clobbers memory: __builtin___snprintf_chk (&path, 256, 2, 256, "%s_blurred.raw", prefix_97);
+src/main.cpp:207:13: missed: statement clobbers memory: save_raw (&path, _101, _227, _225);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:68:35: missed: statement clobbers memory: __builtin___snprintf_chk (&path, 256, 2, 256, "%s_mag_l1.raw", prefix_97);
+src/main.cpp:209:13: missed: statement clobbers memory: save_raw (&path, _107, _227, _225);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:68:35: missed: statement clobbers memory: __builtin___snprintf_chk (&path, 256, 2, 256, "%s_mag_l2.raw", prefix_97);
+src/main.cpp:211:13: missed: statement clobbers memory: save_raw (&path, _109, _227, _225);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:68:35: missed: statement clobbers memory: __builtin___snprintf_chk (&path, 256, 2, 256, "%s_dir.raw", prefix_97);
+src/main.cpp:213:13: missed: statement clobbers memory: save_raw (&path, _111, _227, _225);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:68:35: missed: statement clobbers memory: __builtin___snprintf_chk (&path, 256, 2, 256, "%s_nms.raw", prefix_97);
+src/main.cpp:215:13: missed: statement clobbers memory: save_raw (&path, _113, _227, _225);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:68:35: missed: statement clobbers memory: __builtin___snprintf_chk (&path, 256, 2, 256, "%s_edges.raw", prefix_97);
+src/main.cpp:217:13: missed: statement clobbers memory: save_raw (&path, _115, _227, _225);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "\nOutputs saved:\n");
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "  %s_blurred.raw\n", prefix_97);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "  %s_mag_l1.raw, %s_mag_l2.raw\n", prefix_97, prefix_97);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "  %s_dir.raw\n", prefix_97);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "  %s_nms.raw   (non-maximum suppression)\n", prefix_97);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "  %s_edges.raw (final edges after hysteresis)\n", prefix_97);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:118:23: missed: statement clobbers memory: __printf_chk (2, "\nDone.\n");
+src/main.cpp:227:9: missed: statement clobbers memory: free (_99);
+src/main.cpp:227:20: missed: statement clobbers memory: free (_101);
+src/main.cpp:227:35: missed: statement clobbers memory: free (Gx_103);
+src/main.cpp:227:45: missed: statement clobbers memory: free (Gy_105);
+src/main.cpp:228:9: missed: statement clobbers memory: free (_107);
+src/main.cpp:228:23: missed: statement clobbers memory: free (_109);
+src/main.cpp:228:37: missed: statement clobbers memory: free (_111);
+src/main.cpp:228:48: missed: statement clobbers memory: free (_113);
+src/main.cpp:228:63: missed: statement clobbers memory: free (_115);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:111:24: missed: statement clobbers memory: __fprintf_chk (stderr.0_277, 2, "Usage: %s <width> <height> <input.raw> <output_prefix> [low_thresh] [high_thresh]\n", _1);
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:111:24: missed: statement clobbers memory: __fprintf_chk (stderr.1_278, 2, "  low_thresh  : weak edge threshold (default: auto = 5%% of max magnitude)\n");
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:111:24: missed: statement clobbers memory: __fprintf_chk (stderr.2_279, 2, "  high_thresh : strong edge threshold (default: auto = 15%% of max magnitude)\n");
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:111:24: missed: statement clobbers memory: __fprintf_chk (stderr.3_280, 2, "\nPipeline stages:\n");
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:111:24: missed: statement clobbers memory: __fprintf_chk (stderr.4_281, 2, "  1. Gaussian Blur    (5x5, scalar + RVV)\n");
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:111:24: missed: statement clobbers memory: __fprintf_chk (stderr.5_282, 2, "  2. Sobel Gradient   (Gx, Gy, scalar + RVV)\n");
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:111:24: missed: statement clobbers memory: __fprintf_chk (stderr.6_283, 2, "  3. Magnitude L1/L2  (|Gx|+|Gy|, sqrt(Gx^2+Gy^2))\n");
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:111:24: missed: statement clobbers memory: __fprintf_chk (stderr.7_284, 2, "  4. Direction        (0/45/90/135 degrees, scalar + RVV)\n");
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:111:24: missed: statement clobbers memory: __fprintf_chk (stderr.8_285, 2, "  5. NMS              (non-maximum suppression)\n");
+/usr/riscv64-linux-gnu/include/bits/stdio2.h:111:24: missed: statement clobbers memory: __fprintf_chk (stderr.9_286, 2, "  6. Thresholding     (double threshold + hysteresis)\n");
+src/main.cpp:82:30: note: ***** Analysis failed with vector mode RVVM1DI
+src/main.cpp:82:30: note: ***** The result for vector mode RVVM1QI would be the same
+src/main.cpp:82:30: note: ***** The result for vector mode RVVMF2QI would be the same
+src/main.cpp:82:30: note: ***** The result for vector mode RVVMF4QI would be the same
+src/main.cpp:82:30: note: ***** Re-trying analysis with vector mode RVVMF8QI
+src/main.cpp:82:30: note: ***** Analysis failed with vector mode RVVMF8QI
+src/main.cpp:82:30: note: ***** Re-trying analysis with vector mode V16QI
+src/main.cpp:82:30: note: ***** Analysis failed with vector mode V16QI
+src/main.cpp:82:30: note: ***** Re-trying analysis with vector mode V8QI
+src/main.cpp:82:30: note: ***** Analysis failed with vector mode V8QI
+src/main.cpp:82:30: note: ***** Re-trying analysis with vector mode V4QI
+src/main.cpp:82:30: note: ***** Analysis failed with vector mode V4QI
+src/main.cpp:82:30: note: ***** Re-trying analysis with vector mode V2QI
+src/main.cpp:82:30: note: ***** Analysis failed with vector mode V2QI
+src/main.cpp:82:30: note: ***** Re-trying analysis with vector mode V1QI
+src/main.cpp:82:30: note: ***** Analysis failed with vector mode V1QI
+rvv/direction_rvv.cpp:32:23: missed: couldn't vectorize loop
+rvv/direction_rvv.cpp:32:23: missed: not vectorized: number of iterations cannot be computed.
+rvv/direction_rvv.cpp:25:6: note: vectorized 0 loops in function.
+rvv/direction_rvv.cpp:36:47: missed: statement clobbers memory: vgx_23 = __riscv_vle16_v_i16m1 (_5, vl_21);
+rvv/direction_rvv.cpp:37:47: missed: statement clobbers memory: vgy_25 = __riscv_vle16_v_i16m1 (_6, vl_21);
+rvv/direction_rvv.cpp:85:28: missed: statement clobbers memory: __riscv_vse8_v_u8m1 (_13, vresult_43, vl_21);
+rvv/direction_rvv.cpp:87:11: note: ***** Analysis failed with vector mode RVVM1SI
+rvv/direction_rvv.cpp:87:11: note: ***** The result for vector mode RVVM1QI would be the same
+rvv/direction_rvv.cpp:87:11: note: ***** The result for vector mode RVVMF2QI would be the same
+rvv/direction_rvv.cpp:87:11: note: ***** The result for vector mode RVVMF4QI would be the same
+rvv/direction_rvv.cpp:87:11: note: ***** Re-trying analysis with vector mode RVVMF8QI
+rvv/direction_rvv.cpp:87:11: note: ***** Analysis failed with vector mode RVVMF8QI
+rvv/direction_rvv.cpp:87:11: note: ***** Re-trying analysis with vector mode V16QI
+rvv/direction_rvv.cpp:87:11: note: ***** Analysis failed with vector mode V16QI
+rvv/direction_rvv.cpp:87:11: note: ***** Re-trying analysis with vector mode V8QI
+rvv/direction_rvv.cpp:87:11: note: ***** Analysis failed with vector mode V8QI
+rvv/direction_rvv.cpp:87:11: note: ***** Re-trying analysis with vector mode V4QI
+rvv/direction_rvv.cpp:87:11: note: ***** Analysis failed with vector mode V4QI
+rvv/direction_rvv.cpp:87:11: note: ***** Re-trying analysis with vector mode V2QI
+rvv/direction_rvv.cpp:87:11: note: ***** Analysis failed with vector mode V2QI
+rvv/direction_rvv.cpp:87:11: note: ***** Re-trying analysis with vector mode V1QI
+rvv/direction_rvv.cpp:87:11: note: ***** Analysis failed with vector mode V1QI
+rvv/gaussian_rvv.cpp:121:27: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:121:27: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:123:27: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:123:27: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:21:25: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:21:25: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:24:29: optimized: loop vectorized using variable length vectors
+rvv/gaussian_rvv.cpp:52:23: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:52:23: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:114:31: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:114:31: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:21:25: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:21:25: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:24:29: optimized: loop vectorized using variable length vectors
+rvv/gaussian_rvv.cpp:61:27: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:61:27: missed: not vectorized: multiple nested loops.
+rvv/gaussian_rvv.cpp:69:33: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:74:57: missed: statement clobbers memory: px8_71 = __riscv_vle8_v_u8m1 (_14, vl_57);
+rvv/gaussian_rvv.cpp:71:37: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:74:57: missed: statement clobbers memory: px8_71 = __riscv_vle8_v_u8m1 (_14, vl_57);
+rvv/gaussian_rvv.cpp:56:31: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:56:31: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:21:25: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:21:25: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:24:29: optimized: loop vectorized using variable length vectors
+rvv/gaussian_rvv.cpp:45:27: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:45:27: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:46:27: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:46:27: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:21:25: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:21:25: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:24:29: optimized: loop vectorized using variable length vectors
+rvv/gaussian_rvv.cpp:40:6: note: vectorized 4 loops in function.
+rvv/gaussian_rvv.cpp:40:6: missed: statement clobbers memory: vect_patt_582.108_42 = .MASK_LEN_GATHER_LOAD (_237, vect__99.106_31, 1, { 0, ... }, mask__127.107_27, _611(D), _24, 0);
+rvv/gaussian_rvv.cpp:27:66: missed: statement clobbers memory: vect__104.113_39 = .MASK_LEN_LOAD (vectp.112_616, 16B, mask__127.107_27, _621(D), _24, 0);
+rvv/gaussian_rvv.cpp:40:6: missed: statement clobbers memory: vect_patt_582.108_612 = .MASK_LEN_GATHER_LOAD (_237, vect__99.106_609, 1, { 0, ... }, mask__127.107_610, _611(D), _635, 0);
+rvv/gaussian_rvv.cpp:27:66: missed: statement clobbers memory: vect__104.113_622 = .MASK_LEN_LOAD (vectp.111_194, 16B, mask__127.107_610, _621(D), _635, 0);
+rvv/gaussian_rvv.cpp:40:6: missed: statement clobbers memory: vect_patt_520.84_171 = .MASK_LEN_GATHER_LOAD (_122, vect__135.82_165, 1, { 0, ... }, mask__107.83_253, _549(D), _145, 0);
+rvv/gaussian_rvv.cpp:27:66: missed: statement clobbers memory: vect__140.89_250 = .MASK_LEN_LOAD (vectp.88_554, 16B, mask__107.83_253, _559(D), _145, 0);
+rvv/gaussian_rvv.cpp:40:6: missed: statement clobbers memory: vect_patt_520.84_550 = .MASK_LEN_GATHER_LOAD (_122, vect__135.82_547, 1, { 0, ... }, mask__107.83_548, _549(D), _573, 0);
+rvv/gaussian_rvv.cpp:27:66: missed: statement clobbers memory: vect__140.89_560 = .MASK_LEN_LOAD (vectp.87_593, 16B, mask__107.83_548, _559(D), _573, 0);
+rvv/gaussian_rvv.cpp:74:57: missed: statement clobbers memory: px8_71 = __riscv_vle8_v_u8m1 (_14, vl_57);
+rvv/gaussian_rvv.cpp:108:32: missed: statement clobbers memory: __riscv_vse8_v_u8m1 (_21, result_65, vl_57);
+rvv/gaussian_rvv.cpp:40:6: missed: statement clobbers memory: vect_patt_460.60_134 = .MASK_LEN_GATHER_LOAD (_252, vect__171.58_384, 1, { 0, ... }, mask__250.59_216, _487(D), _333, 0);
+rvv/gaussian_rvv.cpp:27:66: missed: statement clobbers memory: vect__176.65_369 = .MASK_LEN_LOAD (vectp.64_492, 16B, mask__250.59_216, _497(D), _333, 0);
+rvv/gaussian_rvv.cpp:40:6: missed: statement clobbers memory: vect_patt_460.60_488 = .MASK_LEN_GATHER_LOAD (_252, vect__171.58_485, 1, { 0, ... }, mask__250.59_486, _487(D), _511, 0);
+rvv/gaussian_rvv.cpp:27:66: missed: statement clobbers memory: vect__176.65_498 = .MASK_LEN_LOAD (vectp.63_135, 16B, mask__250.59_486, _497(D), _511, 0);
+rvv/gaussian_rvv.cpp:40:6: missed: statement clobbers memory: vect_patt_156.38_99 = .MASK_LEN_GATHER_LOAD (_334, vect__207.36_95, 1, { 0, ... }, mask__332.37_402, _427(D), _365, 0);
+rvv/gaussian_rvv.cpp:27:66: missed: statement clobbers memory: vect__212.43_127 = .MASK_LEN_LOAD (vectp.42_432, 16B, mask__332.37_402, _437(D), _365, 0);
+rvv/gaussian_rvv.cpp:40:6: missed: statement clobbers memory: vect_patt_156.38_428 = .MASK_LEN_GATHER_LOAD (_334, vect__207.36_425, 1, { 0, ... }, mask__332.37_426, _427(D), _451, 0);
+rvv/gaussian_rvv.cpp:27:66: missed: statement clobbers memory: vect__212.43_438 = .MASK_LEN_LOAD (vectp.41_204, 16B, mask__332.37_426, _437(D), _451, 0);
+rvv/gaussian_rvv.cpp:33:15: note: ***** Analysis failed with vector mode RVVM1QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** The result for vector mode RVVM1QI would be the same
+rvv/gaussian_rvv.cpp:33:15: note: ***** Re-trying analysis with vector mode RVVMF2QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Analysis failed with vector mode RVVMF2QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Re-trying analysis with vector mode RVVMF4QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Analysis failed with vector mode RVVMF4QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Re-trying analysis with vector mode RVVMF8QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Analysis failed with vector mode RVVMF8QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Re-trying analysis with vector mode V16QI
+rvv/gaussian_rvv.cpp:108:48: note: ***** Analysis succeeded with vector mode V16QI
+rvv/gaussian_rvv.cpp:108:48: note: SLPing BB part
+rvv/gaussian_rvv.cpp:75:38: note: Costing subgraph: 
+rvv/gaussian_rvv.cpp:75:38: note: node 0x3af78bd8 (max_nunits=2, refcnt=1) vector(2) sizetype
+rvv/gaussian_rvv.cpp:75:38: note: op template: _11 = (sizetype) _10;
+rvv/gaussian_rvv.cpp:75:38: note: 	stmt 0 _11 = (sizetype) _10;
+rvv/gaussian_rvv.cpp:75:38: note: 	stmt 1 _12 = (sizetype) nx_70;
+rvv/gaussian_rvv.cpp:75:38: note: 	children 0x3af78638
+rvv/gaussian_rvv.cpp:75:38: note: node (external) 0x3af78638 (max_nunits=1, refcnt=1) vector(2) int
+rvv/gaussian_rvv.cpp:75:38: note: 	{ _10, nx_70 }
+rvv/gaussian_rvv.cpp:75:38: note: Cost model analysis: 
+rvv/gaussian_rvv.cpp:75:38: note: Cost model analysis for part in loop 7:
+  Vector cost: 7
+  Scalar cost: 1
+rvv/gaussian_rvv.cpp:75:38: missed: not vectorized: vectorization is not profitable.
+rvv/gaussian_rvv.cpp:108:48: note: Costing subgraph: 
+rvv/gaussian_rvv.cpp:108:48: note: node 0x3af78758 (max_nunits=2, refcnt=1) vector(2) sizetype
+rvv/gaussian_rvv.cpp:108:48: note: op template: _19 = (sizetype) x_271;
+rvv/gaussian_rvv.cpp:108:48: note: 	stmt 0 _19 = (sizetype) x_271;
+rvv/gaussian_rvv.cpp:108:48: note: 	stmt 1 _398 = (sizetype) row_base_55;
+rvv/gaussian_rvv.cpp:108:48: note: 	children 0x3af78a28
+rvv/gaussian_rvv.cpp:108:48: note: node (external) 0x3af78a28 (max_nunits=1, refcnt=1) vector(2) int
+rvv/gaussian_rvv.cpp:108:48: note: 	{ x_271, row_base_55 }
+rvv/gaussian_rvv.cpp:108:48: note: Cost model analysis: 
+rvv/gaussian_rvv.cpp:108:48: note: Scalar 2 and vector 6 loop part do not match up, skipping scalar part
+rvv/gaussian_rvv.cpp:108:48: note: Cost model analysis for part in loop 6:
+  Vector cost: 12
+  Scalar cost: 2
+rvv/gaussian_rvv.cpp:108:48: missed: not vectorized: vectorization is not profitable.
+rvv/gaussian_rvv.cpp:108:48: note: ***** Re-trying analysis with vector mode V8QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Analysis failed with vector mode V8QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Re-trying analysis with vector mode V4QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Analysis failed with vector mode V4QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Re-trying analysis with vector mode V2QI
+rvv/gaussian_rvv.cpp:108:48: note: ***** Analysis succeeded with vector mode V2QI
+rvv/gaussian_rvv.cpp:108:48: note: SLPing BB part
+rvv/gaussian_rvv.cpp:75:38: note: Costing subgraph: 
+rvv/gaussian_rvv.cpp:75:38: note: node 0x3af78638 (max_nunits=2, refcnt=1) vector(2) sizetype
+rvv/gaussian_rvv.cpp:75:38: note: op template: _11 = (sizetype) _10;
+rvv/gaussian_rvv.cpp:75:38: note: 	stmt 0 _11 = (sizetype) _10;
+rvv/gaussian_rvv.cpp:75:38: note: 	stmt 1 _12 = (sizetype) nx_70;
+rvv/gaussian_rvv.cpp:75:38: note: 	children 0x3af78908
+rvv/gaussian_rvv.cpp:75:38: note: node (external) 0x3af78908 (max_nunits=1, refcnt=1) vector(2) int
+rvv/gaussian_rvv.cpp:75:38: note: 	{ _10, nx_70 }
+rvv/gaussian_rvv.cpp:75:38: note: Cost model analysis: 
+rvv/gaussian_rvv.cpp:75:38: note: Cost model analysis for part in loop 7:
+  Vector cost: 7
+  Scalar cost: 1
+rvv/gaussian_rvv.cpp:75:38: missed: not vectorized: vectorization is not profitable.
+rvv/gaussian_rvv.cpp:108:48: note: Costing subgraph: 
+rvv/gaussian_rvv.cpp:108:48: note: node 0x3af78e18 (max_nunits=2, refcnt=1) vector(2) sizetype
+rvv/gaussian_rvv.cpp:108:48: note: op template: _19 = (sizetype) x_271;
+rvv/gaussian_rvv.cpp:108:48: note: 	stmt 0 _19 = (sizetype) x_271;
+rvv/gaussian_rvv.cpp:108:48: note: 	stmt 1 _398 = (sizetype) row_base_55;
+rvv/gaussian_rvv.cpp:108:48: note: 	children 0x3af78cf8
+rvv/gaussian_rvv.cpp:108:48: note: node (external) 0x3af78cf8 (max_nunits=1, refcnt=1) vector(2) int
+rvv/gaussian_rvv.cpp:108:48: note: 	{ x_271, row_base_55 }
+rvv/gaussian_rvv.cpp:108:48: note: Cost model analysis: 
+rvv/gaussian_rvv.cpp:108:48: note: Scalar 2 and vector 6 loop part do not match up, skipping scalar part
+rvv/gaussian_rvv.cpp:108:48: note: Cost model analysis for part in loop 6:
+  Vector cost: 12
+  Scalar cost: 2
+rvv/gaussian_rvv.cpp:108:48: missed: not vectorized: vectorization is not profitable.
+rvv/gaussian_rvv.cpp:108:48: note: ***** Re-trying analysis with vector mode V1QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Analysis failed with vector mode V1QI
+rvv/gaussian_rvv.cpp:198:27: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:198:27: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:200:27: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:200:27: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:21:25: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:21:25: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:24:29: optimized: loop vectorized using variable length vectors
+rvv/gaussian_rvv.cpp:145:23: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:145:23: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:191:31: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:191:31: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:21:25: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:21:25: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:24:29: optimized: loop vectorized using variable length vectors
+rvv/gaussian_rvv.cpp:154:27: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:154:27: missed: not vectorized: multiple nested loops.
+rvv/gaussian_rvv.cpp:161:33: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:165:59: missed: statement clobbers memory: px8_71 = __riscv_vle8_v_u8m2 (_14, vl_57);
+rvv/gaussian_rvv.cpp:163:37: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:165:59: missed: statement clobbers memory: px8_71 = __riscv_vle8_v_u8m2 (_14, vl_57);
+rvv/gaussian_rvv.cpp:149:31: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:149:31: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:21:25: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:21:25: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:24:29: optimized: loop vectorized using variable length vectors
+rvv/gaussian_rvv.cpp:138:27: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:138:27: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:139:27: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:139:27: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:21:25: missed: couldn't vectorize loop
+rvv/gaussian_rvv.cpp:21:25: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/gaussian_rvv.cpp:24:29: optimized: loop vectorized using variable length vectors
+rvv/gaussian_rvv.cpp:133:6: note: vectorized 4 loops in function.
+rvv/gaussian_rvv.cpp:133:6: missed: statement clobbers memory: vect_patt_582.350_42 = .MASK_LEN_GATHER_LOAD (_237, vect__99.348_31, 1, { 0, ... }, mask__127.349_27, _611(D), _24, 0);
+rvv/gaussian_rvv.cpp:27:66: missed: statement clobbers memory: vect__104.355_39 = .MASK_LEN_LOAD (vectp.354_616, 16B, mask__127.349_27, _621(D), _24, 0);
+rvv/gaussian_rvv.cpp:133:6: missed: statement clobbers memory: vect_patt_582.350_612 = .MASK_LEN_GATHER_LOAD (_237, vect__99.348_609, 1, { 0, ... }, mask__127.349_610, _611(D), _635, 0);
+rvv/gaussian_rvv.cpp:27:66: missed: statement clobbers memory: vect__104.355_622 = .MASK_LEN_LOAD (vectp.353_194, 16B, mask__127.349_610, _621(D), _635, 0);
+rvv/gaussian_rvv.cpp:133:6: missed: statement clobbers memory: vect_patt_520.326_171 = .MASK_LEN_GATHER_LOAD (_122, vect__135.324_165, 1, { 0, ... }, mask__107.325_253, _549(D), _145, 0);
+rvv/gaussian_rvv.cpp:27:66: missed: statement clobbers memory: vect__140.331_250 = .MASK_LEN_LOAD (vectp.330_554, 16B, mask__107.325_253, _559(D), _145, 0);
+rvv/gaussian_rvv.cpp:133:6: missed: statement clobbers memory: vect_patt_520.326_550 = .MASK_LEN_GATHER_LOAD (_122, vect__135.324_547, 1, { 0, ... }, mask__107.325_548, _549(D), _573, 0);
+rvv/gaussian_rvv.cpp:27:66: missed: statement clobbers memory: vect__140.331_560 = .MASK_LEN_LOAD (vectp.329_593, 16B, mask__107.325_548, _559(D), _573, 0);
+rvv/gaussian_rvv.cpp:165:59: missed: statement clobbers memory: px8_71 = __riscv_vle8_v_u8m2 (_14, vl_57);
+rvv/gaussian_rvv.cpp:185:32: missed: statement clobbers memory: __riscv_vse8_v_u8m2 (_21, result_65, vl_57);
+rvv/gaussian_rvv.cpp:133:6: missed: statement clobbers memory: vect_patt_460.302_134 = .MASK_LEN_GATHER_LOAD (_252, vect__171.300_384, 1, { 0, ... }, mask__250.301_216, _487(D), _333, 0);
+rvv/gaussian_rvv.cpp:27:66: missed: statement clobbers memory: vect__176.307_369 = .MASK_LEN_LOAD (vectp.306_492, 16B, mask__250.301_216, _497(D), _333, 0);
+rvv/gaussian_rvv.cpp:133:6: missed: statement clobbers memory: vect_patt_460.302_488 = .MASK_LEN_GATHER_LOAD (_252, vect__171.300_485, 1, { 0, ... }, mask__250.301_486, _487(D), _511, 0);
+rvv/gaussian_rvv.cpp:27:66: missed: statement clobbers memory: vect__176.307_498 = .MASK_LEN_LOAD (vectp.305_135, 16B, mask__250.301_486, _497(D), _511, 0);
+rvv/gaussian_rvv.cpp:133:6: missed: statement clobbers memory: vect_patt_156.280_99 = .MASK_LEN_GATHER_LOAD (_334, vect__207.278_95, 1, { 0, ... }, mask__332.279_402, _427(D), _365, 0);
+rvv/gaussian_rvv.cpp:27:66: missed: statement clobbers memory: vect__212.285_127 = .MASK_LEN_LOAD (vectp.284_432, 16B, mask__332.279_402, _437(D), _365, 0);
+rvv/gaussian_rvv.cpp:133:6: missed: statement clobbers memory: vect_patt_156.280_428 = .MASK_LEN_GATHER_LOAD (_334, vect__207.278_425, 1, { 0, ... }, mask__332.279_426, _427(D), _451, 0);
+rvv/gaussian_rvv.cpp:27:66: missed: statement clobbers memory: vect__212.285_438 = .MASK_LEN_LOAD (vectp.283_204, 16B, mask__332.279_426, _437(D), _451, 0);
+rvv/gaussian_rvv.cpp:33:15: note: ***** Analysis failed with vector mode RVVM1QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** The result for vector mode RVVM1QI would be the same
+rvv/gaussian_rvv.cpp:33:15: note: ***** Re-trying analysis with vector mode RVVMF2QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Analysis failed with vector mode RVVMF2QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Re-trying analysis with vector mode RVVMF4QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Analysis failed with vector mode RVVMF4QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Re-trying analysis with vector mode RVVMF8QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Analysis failed with vector mode RVVMF8QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Re-trying analysis with vector mode V16QI
+rvv/gaussian_rvv.cpp:185:48: note: ***** Analysis succeeded with vector mode V16QI
+rvv/gaussian_rvv.cpp:185:48: note: SLPing BB part
+rvv/gaussian_rvv.cpp:165:73: note: Costing subgraph: 
+rvv/gaussian_rvv.cpp:165:73: note: node 0x3ab6a168 (max_nunits=2, refcnt=1) vector(2) sizetype
+rvv/gaussian_rvv.cpp:165:73: note: op template: _11 = (sizetype) _10;
+rvv/gaussian_rvv.cpp:165:73: note: 	stmt 0 _11 = (sizetype) _10;
+rvv/gaussian_rvv.cpp:165:73: note: 	stmt 1 _12 = (sizetype) nx_70;
+rvv/gaussian_rvv.cpp:165:73: note: 	children 0x3ab69bc8
+rvv/gaussian_rvv.cpp:165:73: note: node (external) 0x3ab69bc8 (max_nunits=1, refcnt=1) vector(2) int
+rvv/gaussian_rvv.cpp:165:73: note: 	{ _10, nx_70 }
+rvv/gaussian_rvv.cpp:165:73: note: Cost model analysis: 
+rvv/gaussian_rvv.cpp:165:73: note: Cost model analysis for part in loop 7:
+  Vector cost: 7
+  Scalar cost: 1
+rvv/gaussian_rvv.cpp:165:73: missed: not vectorized: vectorization is not profitable.
+rvv/gaussian_rvv.cpp:185:48: note: Costing subgraph: 
+rvv/gaussian_rvv.cpp:185:48: note: node 0x3ab69ce8 (max_nunits=2, refcnt=1) vector(2) sizetype
+rvv/gaussian_rvv.cpp:185:48: note: op template: _19 = (sizetype) x_271;
+rvv/gaussian_rvv.cpp:185:48: note: 	stmt 0 _19 = (sizetype) x_271;
+rvv/gaussian_rvv.cpp:185:48: note: 	stmt 1 _398 = (sizetype) row_base_55;
+rvv/gaussian_rvv.cpp:185:48: note: 	children 0x3ab69fb8
+rvv/gaussian_rvv.cpp:185:48: note: node (external) 0x3ab69fb8 (max_nunits=1, refcnt=1) vector(2) int
+rvv/gaussian_rvv.cpp:185:48: note: 	{ x_271, row_base_55 }
+rvv/gaussian_rvv.cpp:185:48: note: Cost model analysis: 
+rvv/gaussian_rvv.cpp:185:48: note: Scalar 2 and vector 6 loop part do not match up, skipping scalar part
+rvv/gaussian_rvv.cpp:185:48: note: Cost model analysis for part in loop 6:
+  Vector cost: 12
+  Scalar cost: 2
+rvv/gaussian_rvv.cpp:185:48: missed: not vectorized: vectorization is not profitable.
+rvv/gaussian_rvv.cpp:185:48: note: ***** Re-trying analysis with vector mode V8QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Analysis failed with vector mode V8QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Re-trying analysis with vector mode V4QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Analysis failed with vector mode V4QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Re-trying analysis with vector mode V2QI
+rvv/gaussian_rvv.cpp:185:48: note: ***** Analysis succeeded with vector mode V2QI
+rvv/gaussian_rvv.cpp:185:48: note: SLPing BB part
+rvv/gaussian_rvv.cpp:165:73: note: Costing subgraph: 
+rvv/gaussian_rvv.cpp:165:73: note: node 0x3ab69bc8 (max_nunits=2, refcnt=1) vector(2) sizetype
+rvv/gaussian_rvv.cpp:165:73: note: op template: _11 = (sizetype) _10;
+rvv/gaussian_rvv.cpp:165:73: note: 	stmt 0 _11 = (sizetype) _10;
+rvv/gaussian_rvv.cpp:165:73: note: 	stmt 1 _12 = (sizetype) nx_70;
+rvv/gaussian_rvv.cpp:165:73: note: 	children 0x3ab69e98
+rvv/gaussian_rvv.cpp:165:73: note: node (external) 0x3ab69e98 (max_nunits=1, refcnt=1) vector(2) int
+rvv/gaussian_rvv.cpp:165:73: note: 	{ _10, nx_70 }
+rvv/gaussian_rvv.cpp:165:73: note: Cost model analysis: 
+rvv/gaussian_rvv.cpp:165:73: note: Cost model analysis for part in loop 7:
+  Vector cost: 7
+  Scalar cost: 1
+rvv/gaussian_rvv.cpp:165:73: missed: not vectorized: vectorization is not profitable.
+rvv/gaussian_rvv.cpp:185:48: note: Costing subgraph: 
+rvv/gaussian_rvv.cpp:185:48: note: node 0x3ab6a3a8 (max_nunits=2, refcnt=1) vector(2) sizetype
+rvv/gaussian_rvv.cpp:185:48: note: op template: _19 = (sizetype) x_271;
+rvv/gaussian_rvv.cpp:185:48: note: 	stmt 0 _19 = (sizetype) x_271;
+rvv/gaussian_rvv.cpp:185:48: note: 	stmt 1 _398 = (sizetype) row_base_55;
+rvv/gaussian_rvv.cpp:185:48: note: 	children 0x3ab6a288
+rvv/gaussian_rvv.cpp:185:48: note: node (external) 0x3ab6a288 (max_nunits=1, refcnt=1) vector(2) int
+rvv/gaussian_rvv.cpp:185:48: note: 	{ x_271, row_base_55 }
+rvv/gaussian_rvv.cpp:185:48: note: Cost model analysis: 
+rvv/gaussian_rvv.cpp:185:48: note: Scalar 2 and vector 6 loop part do not match up, skipping scalar part
+rvv/gaussian_rvv.cpp:185:48: note: Cost model analysis for part in loop 6:
+  Vector cost: 12
+  Scalar cost: 2
+rvv/gaussian_rvv.cpp:185:48: missed: not vectorized: vectorization is not profitable.
+rvv/gaussian_rvv.cpp:185:48: note: ***** Re-trying analysis with vector mode V1QI
+rvv/gaussian_rvv.cpp:33:15: note: ***** Analysis failed with vector mode V1QI
+rvv/gaussian_rvv.cpp:208:24: missed: statement clobbers memory: gaussian_5x5_rvv_m1 (src_2(D), dst_3(D), w_4(D), h_5(D));
+rvv/gaussian_rvv.cpp:209:1: note: ***** Analysis failed with vector mode VOID
+rvv/magnitude_rvv.cpp:76:23: missed: couldn't vectorize loop
+rvv/magnitude_rvv.cpp:76:23: missed: not vectorized: number of iterations cannot be computed.
+rvv/magnitude_rvv.cpp:41:23: missed: couldn't vectorize loop
+rvv/magnitude_rvv.cpp:41:23: missed: not vectorized: number of iterations cannot be computed.
+rvv/magnitude_rvv.cpp:23:6: note: vectorized 0 loops in function.
+rvv/magnitude_rvv.cpp:33:22: missed: statement clobbers memory: mag_raw_33 = aligned_alloc (64, _4);
+rvv/magnitude_rvv.cpp:45:47: missed: statement clobbers memory: vgx_52 = __riscv_vle16_v_i16m1 (_9, vl_50);
+rvv/magnitude_rvv.cpp:46:47: missed: statement clobbers memory: vgy_54 = __riscv_vle16_v_i16m1 (_10, vl_50);
+rvv/magnitude_rvv.cpp:57:30: missed: statement clobbers memory: __riscv_vse16_v_i16m1 (_13, vmag_57, vl_50);
+rvv/magnitude_rvv.cpp:79:50: missed: statement clobbers memory: vmag16_39 = __riscv_vle16_v_i16m1 (_19, vl_38);
+rvv/magnitude_rvv.cpp:99:29: missed: statement clobbers memory: __riscv_vse8_v_u8mf2 (_20, vresult_45, vl_38);
+rvv/magnitude_rvv.cpp:104:9: missed: statement clobbers memory: free (mag_raw_33);
+/usr/riscv64-linux-gnu/include/bits/string_fortified.h:59:33: missed: statement clobbers memory: __builtin_memset (mag_46(D), 0, _1);
+rvv/magnitude_rvv.cpp:70:13: missed: statement clobbers memory: free (mag_raw_33);
+rvv/magnitude_rvv.cpp:101:11: note: ***** Analysis failed with vector mode RVVM1SI
+rvv/magnitude_rvv.cpp:101:11: note: ***** The result for vector mode RVVM1QI would be the same
+rvv/magnitude_rvv.cpp:101:11: note: ***** The result for vector mode RVVMF2QI would be the same
+rvv/magnitude_rvv.cpp:101:11: note: ***** The result for vector mode RVVMF4QI would be the same
+rvv/magnitude_rvv.cpp:101:11: note: ***** Re-trying analysis with vector mode RVVMF8QI
+rvv/magnitude_rvv.cpp:101:11: note: ***** Analysis failed with vector mode RVVMF8QI
+rvv/magnitude_rvv.cpp:101:11: note: ***** Re-trying analysis with vector mode V16QI
+rvv/magnitude_rvv.cpp:101:11: note: ***** Analysis failed with vector mode V16QI
+rvv/magnitude_rvv.cpp:101:11: note: ***** Re-trying analysis with vector mode V8QI
+rvv/magnitude_rvv.cpp:101:11: note: ***** Analysis failed with vector mode V8QI
+rvv/magnitude_rvv.cpp:101:11: note: ***** Re-trying analysis with vector mode V4QI
+rvv/magnitude_rvv.cpp:101:11: note: ***** Analysis failed with vector mode V4QI
+rvv/magnitude_rvv.cpp:101:11: note: ***** Re-trying analysis with vector mode V2QI
+rvv/magnitude_rvv.cpp:101:11: note: ***** Analysis failed with vector mode V2QI
+rvv/magnitude_rvv.cpp:101:11: note: ***** Re-trying analysis with vector mode V1QI
+rvv/magnitude_rvv.cpp:101:11: note: ***** Analysis failed with vector mode V1QI
+rvv/sobel_rvv.cpp:55:23: missed: couldn't vectorize loop
+rvv/sobel_rvv.cpp:55:23: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/sobel_rvv.cpp:19:26: missed: couldn't vectorize loop
+rvv/sobel_rvv.cpp:19:26: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/sobel_rvv.cpp:22:30: missed: couldn't vectorize loop
+rvv/sobel_rvv.cpp:22:30: missed: not vectorized: unsupported data-type
+rvv/sobel_rvv.cpp:62:27: missed: couldn't vectorize loop
+rvv/sobel_rvv.cpp:62:27: missed: not vectorized: unsupported control flow in loop.
+rvv/sobel_rvv.cpp:71:34: missed: couldn't vectorize loop
+rvv/sobel_rvv.cpp:71:34: missed: not vectorized: unsupported control flow in loop.
+rvv/sobel_rvv.cpp:19:26: missed: couldn't vectorize loop
+rvv/sobel_rvv.cpp:19:26: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+rvv/sobel_rvv.cpp:22:30: missed: couldn't vectorize loop
+rvv/sobel_rvv.cpp:22:30: missed: not vectorized: unsupported data-type
+rvv/sobel_rvv.cpp:50:6: note: vectorized 0 loops in function.
+rvv/sobel_rvv.cpp:80:54: missed: statement clobbers memory: v8_l_62 = __riscv_vle8_v_u8m1 (_9, vl_54);
+rvv/sobel_rvv.cpp:81:54: missed: statement clobbers memory: v8_c_63 = __riscv_vle8_v_u8m1 (_10, vl_54);
+rvv/sobel_rvv.cpp:82:54: missed: statement clobbers memory: v8_r_64 = __riscv_vle8_v_u8m1 (_12, vl_54);
+rvv/sobel_rvv.cpp:124:34: missed: statement clobbers memory: __riscv_vse16_v_i16m2 (_26, acc_gx_221, vl_54);
+rvv/sobel_rvv.cpp:125:34: missed: statement clobbers memory: __riscv_vse16_v_i16m2 (_27, acc_gy_197, vl_54);
+rvv/sobel_rvv.cpp:30:14: note: ***** Analysis failed with vector mode RVVM1QI
+rvv/sobel_rvv.cpp:30:14: note: ***** The result for vector mode RVVM1QI would be the same
+rvv/sobel_rvv.cpp:30:14: note: ***** Re-trying analysis with vector mode RVVMF2QI
+rvv/sobel_rvv.cpp:30:14: note: ***** Analysis failed with vector mode RVVMF2QI
+rvv/sobel_rvv.cpp:30:14: note: ***** Re-trying analysis with vector mode RVVMF4QI
+rvv/sobel_rvv.cpp:30:14: note: ***** Analysis failed with vector mode RVVMF4QI
+rvv/sobel_rvv.cpp:30:14: note: ***** Re-trying analysis with vector mode RVVMF8QI
+rvv/sobel_rvv.cpp:30:14: note: ***** Analysis failed with vector mode RVVMF8QI
+rvv/sobel_rvv.cpp:30:14: note: ***** Re-trying analysis with vector mode V16QI
+rvv/sobel_rvv.cpp:124:49: note: ***** Analysis succeeded with vector mode V16QI
+rvv/sobel_rvv.cpp:124:49: note: SLPing BB part
+rvv/sobel_rvv.cpp:124:49: note: Costing subgraph: 
+rvv/sobel_rvv.cpp:124:49: note: node 0x2d063488 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+rvv/sobel_rvv.cpp:124:49: note: op template: _121 = (long unsigned int) row_base_48;
+rvv/sobel_rvv.cpp:124:49: note: 	stmt 0 _121 = (long unsigned int) row_base_48;
+rvv/sobel_rvv.cpp:124:49: note: 	[l] stmt 1 _240 = (sizetype) x_195;
+rvv/sobel_rvv.cpp:124:49: note: 	children 0x2d063008
+rvv/sobel_rvv.cpp:124:49: note: node (external) 0x2d063008 (max_nunits=1, refcnt=1) const vector(2) int
+rvv/sobel_rvv.cpp:124:49: note: 	{ row_base_48, x_195 }
+rvv/sobel_rvv.cpp:124:49: note: Cost model analysis: 
+rvv/sobel_rvv.cpp:124:49: note: Scalar 2 and vector 1 loop part do not match up, skipping scalar part
+rvv/sobel_rvv.cpp:124:49: note: Excess vector cost for part in loop 1:
+rvv/sobel_rvv.cpp:124:49: missed: not vectorized: vectorization is not profitable.
+rvv/sobel_rvv.cpp:124:49: note: ***** Re-trying analysis with vector mode V8QI
+rvv/sobel_rvv.cpp:30:14: note: ***** Analysis failed with vector mode V8QI
+rvv/sobel_rvv.cpp:30:14: note: ***** Re-trying analysis with vector mode V4QI
+rvv/sobel_rvv.cpp:30:14: note: ***** Analysis failed with vector mode V4QI
+rvv/sobel_rvv.cpp:30:14: note: ***** Re-trying analysis with vector mode V2QI
+rvv/sobel_rvv.cpp:124:49: note: ***** Analysis succeeded with vector mode V2QI
+rvv/sobel_rvv.cpp:124:49: note: SLPing BB part
+rvv/sobel_rvv.cpp:124:49: note: Costing subgraph: 
+rvv/sobel_rvv.cpp:124:49: note: node 0x2d062f78 (max_nunits=2, refcnt=1) vector(2) long unsigned int
+rvv/sobel_rvv.cpp:124:49: note: op template: _121 = (long unsigned int) row_base_48;
+rvv/sobel_rvv.cpp:124:49: note: 	stmt 0 _121 = (long unsigned int) row_base_48;
+rvv/sobel_rvv.cpp:124:49: note: 	[l] stmt 1 _240 = (sizetype) x_195;
+rvv/sobel_rvv.cpp:124:49: note: 	children 0x2d063518
+rvv/sobel_rvv.cpp:124:49: note: node (external) 0x2d063518 (max_nunits=1, refcnt=1) const vector(2) int
+rvv/sobel_rvv.cpp:124:49: note: 	{ row_base_48, x_195 }
+rvv/sobel_rvv.cpp:124:49: note: Cost model analysis: 
+rvv/sobel_rvv.cpp:124:49: note: Scalar 2 and vector 1 loop part do not match up, skipping scalar part
+rvv/sobel_rvv.cpp:124:49: note: Excess vector cost for part in loop 1:
+rvv/sobel_rvv.cpp:124:49: missed: not vectorized: vectorization is not profitable.
+rvv/sobel_rvv.cpp:124:49: note: ***** Re-trying analysis with vector mode V1QI
+rvv/sobel_rvv.cpp:30:14: note: ***** Analysis failed with vector mode V1QI

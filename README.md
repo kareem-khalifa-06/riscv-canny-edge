@@ -315,60 +315,42 @@ riscv-canny-edge/
 | **Total**      |**28.95ms**|**16.56ms**|**10.998ms**|**6.933ms**|
 | Binary Size    | 533 KB   | 530 KB   | 533 KB   | 532 KB   |
 
+Compiler Note: GCC auto-vectorization introduced a significant performance anomaly in the scalar Gaussian kernel when targeting rv64gcv. To obtain consistent profiling results, automatic vectorization was disabled using:
+-fno-tree-vectorize -fno-tree-slp-vectorize
+This eliminated a compiler-induced slowdown and produced stable optimization-level comparisons.
+
 ### RVV vs Scalar — VLEN Sweep (256×256 image, compiled at -O2)
 
 Measured on QEMU. All outputs verified byte-identical across VLEN=128/256/512 (MD5 confirmed).
 
-| Stage          | Scalar     | RVV VLEN=128 | RVV VLEN=256 | RVV VLEN=512 | Notes                         |
-|----------------|------------|--------------|--------------|--------------|-------------------------------|
-| Gaussian Blur  | ~290–315ms | 38.9ms (8.1×)| 31.0ms (6.9×)| 35.9ms (8.2×)| ✅ Strong speedup              |
-| Sobel Gradient | ~6–9ms     | 8.8ms (0.8×) | 7.5ms (0.8×) | 11.7ms (0.8×)| ⚠️ See analysis below         |
-| Magnitude L1   | ~4–5ms     | 5.8ms (0.8×) | 5.1ms (1.0×) | 5.4ms (1.0×) | ⚠️ See analysis below         |
-| Direction      | ~1ms       | 6.1ms (0.1×) | 6.1ms (0.2×) | 7.2ms (0.2×) | ⚠️ See analysis below         |
-| **Total RVV pipeline** | ~335ms | 85ms (4.1×) | 74ms (3.4×) | 92ms (3.7×) | Dominated by Gaussian gain |
+| Stage                    | Scalar     | RVV VLEN=128      | RVV VLEN=256      | RVV VLEN=512      | Notes |
+|--------------------------|------------|-------------------|-------------------|-------------------|-------|
+| Gaussian Blur (2-D)      | ~5.1 ms    | 31.6 ms (0.2×)    | 11.0 ms (0.5×)    | 5.2 ms (1.0×)     | RVV improves with larger VLEN |
+| Gaussian Blur (Separable)| ~2.0 ms    | 4.6 ms (0.5×)     | 3.2 ms (0.6×)     | 1.9 ms (1.0×)     | 2.5× faster than scalar 2-D |
+| Sobel Gradient           | ~2.7 ms    | 2.0 ms (1.5×)     | 1.3 ms (2.1×)     | 1.3 ms (2.1×)     | Consistent RVV benefit |
+| Magnitude L1             | ~0.5 ms    | 1.0 ms (0.6×)     | 1.2 ms (0.4×)     | 0.8 ms (0.6×)     | Scalar remains faster |
+| Direction                | ~0.5 ms    | 3.2 ms (0.2×)     | 3.9 ms (0.1×)     | 2.9 ms (0.2×)     | RVV overhead dominates |
+| **Total RVV pipeline**   | ~7.6 ms    | 12.7 ms (0.6×)    | 11.4 ms (0.7×)    | 8.6 ms (0.8×)     | Best result at VLEN=512 |
 
-#### Why Sobel, Magnitude, and Direction RVV are slower on QEMU
+Analysis of RVV and Separable Gaussian Performance
 
-This is an important finding and demonstrates understanding of where RVV helps and where it
-does not — which is exactly what the project asks you to analyze.
+The most significant optimization in this project was replacing the original 5×5 Gaussian convolution with a separable implementation. By decomposing the 5×5 kernel into independent horizontal and vertical 1×5 filters, the number of multiply-accumulate operations per pixel was reduced from 25 to 10. This reduced the scalar Gaussian runtime by approximately 2.5× across all tested VLEN configurations.
 
-**Gaussian is compute-bound:** Each output pixel requires 25 multiply-accumulates plus
-data widening (u8→u16→u32). The arithmetic-to-memory ratio is high enough that RVV
-vectorization amortizes the `vsetvl` + load/store overhead easily, delivering **~7–8×
-speedup**.
+Unlike the original implementation, Gaussian Blur is no longer the dominant bottleneck in the pipeline. After applying the separable filter optimization, the largest contributor to runtime became Magnitude L2, while Gaussian execution time was reduced to approximately 2 ms.
 
-**Sobel, Magnitude, and Direction are memory-bound on small images:** These stages have
-very low arithmetic intensity — Sobel does ~9 multiplications, Magnitude does 2 additions
-and 1 division, Direction does 4 comparisons. On a 256×256 image the entire dataset fits
-in L1 cache on real hardware, but under QEMU's DBT:
+RVV acceleration provided the most consistent benefit for the Sobel stage, achieving approximately 2× speedup at VLEN=256 and VLEN=512. However, Magnitude L1 and Direction did not benefit from RVV on this workload. Their scalar implementations were already highly optimized and operated on relatively small datasets, resulting in RVV overhead outweighing the available parallelism.
 
-- Every `vsetvl` instruction is a non-trivial translated operation
-- Vector load/store instructions each go through the DBT translation layer
-- The translation overhead per instruction is roughly constant and proportional
-  to instruction count, not data size
-- Scalar loops at -O2 are already auto-vectorized by the compiler for
-  Magnitude and Direction (14 `vset` instructions confirmed in objdump),
-  so there is less gap for manual RVV to close
+Increasing VLEN improved RVV Gaussian performance significantly. At VLEN=512, the RVV separable Gaussian implementation matched the performance of the optimized scalar separable implementation while remaining substantially faster than the original 5×5 convolution.
 
-**Conclusion (Amdahl's Law in practice):** Gaussian accounts for ~87% of scalar pipeline
-time. Optimizing it with RVV gives a **3.4–4.1× total pipeline speedup** (74–85ms vs
-335ms). Trying to speed up Sobel (2–3% of total) or Magnitude (1.5%) would yield
-negligible pipeline improvement even with perfect vectorization. The RVV implementations
-for these stages are still correct and demonstrate RVV programming competency — they
-just do not win on QEMU at this image size.
-
+A key observation from this investigation is that algorithmic optimization provided a larger performance improvement than vectorization alone. The separable Gaussian filter reduced execution time by a greater margin than RVV acceleration and changed the overall pipeline bottleneck. This demonstrates the importance of selecting efficient algorithms before applying hardware-specific optimizations.
 ### LMUL Sweep — Gaussian (VLEN=256, 256×256, 100 iterations)
 
 | LMUL | Average Time | vs LMUL=1 |
 |------|-------------|-----------|
-| m1   | 46.4 ms     | baseline  |
-| m2   | 48.6 ms     | 1.05× slower |
+| m1   | 12.77 ms     | baseline  |
+| m2   | 5.43 ms     | 2.35× faster |
 
-**Finding:** LMUL=1 is faster. With LMUL=2, each vector register holds twice as many
-elements but the kernel uses ~4 vector temporaries, doubling to ~8 registers with m2.
-This does not cause register spilling at m2 (32 physical → 16 logical), but the wider
-operations reduce the number of logical registers available for the compiler's instruction
-scheduling, slightly increasing dependency stalls. LMUL=1 is the correct choice here.
+Finding: LMUL=2 significantly outperformed LMUL=1 for the Gaussian RVV kernel. Increasing LMUL doubled the number of elements processed per vector instruction, reducing loop overhead and improving throughput. The kernel's register usage remained low enough that the reduction in available logical vector registers did not cause spilling or scheduling issues. For this workload, LMUL=2 provides the best performance and should be preferred over LMUL=1.
 
 ### Auto-vectorization Analysis (GCC -O3 -fopt-info-vec-all)
 
@@ -387,18 +369,15 @@ See `docs/autovec_report.txt` for the full annotated report.
 
 | Stage          | Time (typical) | % of Total |
 |----------------|---------------|------------|
-| Gaussian Blur  | ~290 ms       | **~87%**   |
-| Sobel Gradient | ~7 ms         | **~2%**    |
-| Magnitude L1   | ~4 ms         | **~1%**    |
-| Magnitude L2   | ~20 ms        | ~6%        |
-| Direction      | ~1 ms         | ~0.4%      |
-| NMS            | ~2 ms         | ~0.6%      |
-| Thresholding   | ~5 ms         | ~1.5%      |
+| Gaussian Blur  | ~4.4 ms       | **~24%**   |
+| Sobel Gradient | ~3.0 ms         | **~17%%**  |
+| Magnitude L1   | ~0.5 ms         | ~3%    |
+| Magnitude L2   | ~8.4 ms        | ~**45%**        |
+| Direction      | ~0.5 ms         | ~3%      |
+| NMS            | ~0.9 ms         | ~5%      |
+| Thresholding   | ~0.8 ms         | ~4%      |
 
-**Hotspot:** Gaussian completely dominates at ~87% of pipeline time on QEMU.
-This is consistent with its 25 multiply-accumulates per pixel vs. 2–9 operations
-for other stages. RVV on Gaussian alone yields the majority of total speedup.
-
+**Hotspot:** Magnitude L2 dominates the pipeline at approximately 45% of total runtime. Gaussian Blur is the second largest contributor at approximately 24%. Profiling indicates that optimization efforts should focus primarily on the L2 magnitude computation (sqrt(Gx² + Gy²)), followed by Gaussian Blur and Sobel Gradient.
 ---
 
 ## RVV Implementation Details

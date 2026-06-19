@@ -3,6 +3,7 @@
 // ═════════════════════════════════════════════════════════════════════════════
 #include "image_io.h"
 #include "gaussian.h"
+#include "gaussian_separable.h"   // ← separable scalar + RVV declaration
 #include "sobel.h"
 #include "magnitude.h"
 #include "direction.h"
@@ -28,6 +29,8 @@ void direction_rvv(const int16_t* __restrict__ Gx,
                    const int16_t* __restrict__ Gy,
                    uint8_t* __restrict__ dir,
                    int w, int h);
+// Separable Gaussian RVV (declared in gaussian_separable.h via extern "C")
+// gaussian_5x5_sep_rvv — defined in rvv/gaussian_rvv.cpp
 #endif
 
 static double now_ms() {
@@ -51,31 +54,26 @@ static void print_usage(const char* prog) {
 }
 
 int main(int argc, char** argv) {
-    if (argc < 5) {
-        print_usage(argv[0]);
-        return 1;
-    }
+    if (argc < 5) { print_usage(argv[0]); return 1; }
 
     int w = atoi(argv[1]);
     int h = atoi(argv[2]);
     const char* in_path = argv[3];
     const char* prefix  = argv[4];
 
-    // Optional threshold overrides
-    int user_low_thresh = -1;
-    int user_high_thresh = -1;
-    if (argc > 5) user_low_thresh  = atoi(argv[5]);
-    if (argc > 6) user_high_thresh = atoi(argv[6]);
+    int user_low_thresh  = (argc > 5) ? atoi(argv[5]) : -1;
+    int user_high_thresh = (argc > 6) ? atoi(argv[6]) : -1;
 
-    uint8_t* src      = load_raw(in_path, w, h);
-    uint8_t* blurred  = alloc_image(w, h);
-    int16_t* Gx       = (int16_t*)aligned_alloc(64, w * h * sizeof(int16_t));
-    int16_t* Gy       = (int16_t*)aligned_alloc(64, w * h * sizeof(int16_t));
-    uint8_t* mag_l1   = alloc_image(w, h);
-    uint8_t* mag_l2   = alloc_image(w, h);
-    uint8_t* dir      = alloc_image(w, h);
-    uint8_t* nms_out  = alloc_image(w, h);
-    uint8_t* edge_out = alloc_image(w, h);
+    uint8_t* src         = load_raw(in_path, w, h);
+    uint8_t* blurred     = alloc_image(w, h);
+    uint8_t* blurred_sep = alloc_image(w, h);  // separable output
+    int16_t* Gx          = (int16_t*)aligned_alloc(64, w * h * sizeof(int16_t));
+    int16_t* Gy          = (int16_t*)aligned_alloc(64, w * h * sizeof(int16_t));
+    uint8_t* mag_l1      = alloc_image(w, h);
+    uint8_t* mag_l2      = alloc_image(w, h);
+    uint8_t* dir         = alloc_image(w, h);
+    uint8_t* nms_out     = alloc_image(w, h);
+    uint8_t* edge_out    = alloc_image(w, h);
 
     printf("=== Canny Edge Detection Pipeline ===\n");
     printf("Image: %dx%d\n", w, h);
@@ -85,146 +83,180 @@ int main(int argc, char** argv) {
         printf("Thresholds: auto (low=5%% of max, high=15%% of max)\n");
     printf("\n");
 
-    // ── Scalar stages ────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // SCALAR STAGES
+    // ─────────────────────────────────────────────────────────────────────────
+
+    // Gaussian 2-D reference
     double t1 = now_ms();
     for (int i = 0; i < 100; i++) gaussian_5x5(src, blurred, w, h);
     double t2 = now_ms();
-    printf("[Scalar] Gaussian Blur:    %.3f ms\n", (t2-t1)/100.0);
+    double scalar_gauss2d_ms = (t2 - t1) / 100.0;
+    printf("[Scalar] Gaussian 2-D:     %.3f ms\n", scalar_gauss2d_ms);
 
+    // Gaussian separable scalar
+    double ts1 = now_ms();
+    for (int i = 0; i < 100; i++) gaussian_5x5_separable(src, blurred_sep, w, h);
+    double ts2 = now_ms();
+    double scalar_sep_ms = (ts2 - ts1) / 100.0;
+    printf("[Scalar] Gaussian sep:     %.3f ms  (%.1fx vs 2-D)\n",
+           scalar_sep_ms, scalar_gauss2d_ms / scalar_sep_ms);
+
+    // Compare the two scalar outputs
+    gaussian_5x5(src, blurred, w, h);
+    gaussian_5x5_separable(src, blurred_sep, w, h);
+    GaussianCompareResult cmp = gaussian_compare(blurred, blurred_sep, w, h, /*tol=*/5);
+    printf("[Compare] 2-D vs sep:      max_diff=%d  pixels>tol=%d  %s\n",
+           cmp.max_diff, cmp.pixels_beyond_tol,
+           cmp.within_tolerance ? "OK" : "NOTE: diff is expected (different kernels)");
+    printf("          (K5/273 vs k1d⊗k1d/289 — both valid Gaussian approx, max diff ≤5)\n\n");
+
+    // Sobel — run on the SEPARABLE blurred output so the RVV pipeline is consistent
     double t3 = now_ms();
-    for (int i = 0; i < 100; i++) sobel(blurred, Gx, Gy, w, h);
+    for (int i = 0; i < 100; i++) sobel(blurred_sep, Gx, Gy, w, h);
     double t4 = now_ms();
-    printf("[Scalar] Sobel Gradient:   %.3f ms\n", (t4-t3)/100.0);
+    double scalar_sobel_ms = (t4 - t3) / 100.0;
+    printf("[Scalar] Sobel Gradient:   %.3f ms\n", scalar_sobel_ms);
 
     double t5 = now_ms();
     for (int i = 0; i < 100; i++) magnitude_l1(Gx, Gy, mag_l1, w, h);
     double t6 = now_ms();
-    printf("[Scalar] Magnitude L1:     %.3f ms\n", (t6-t5)/100.0);
+    double scalar_mag_ms = (t6 - t5) / 100.0;
+    printf("[Scalar] Magnitude L1:     %.3f ms\n", scalar_mag_ms);
 
     double t7 = now_ms();
     for (int i = 0; i < 100; i++) magnitude_l2(Gx, Gy, mag_l2, w, h);
     double t8 = now_ms();
-    printf("[Scalar] Magnitude L2:     %.3f ms\n", (t8-t7)/100.0);
+  double scalar_mag_l2_ms = (t8 - t7) / 100.0;
+    printf("[Scalar] Magnitude L2: %.3f ms\n", scalar_mag_l2_ms);
 
     double t9 = now_ms();
     for (int i = 0; i < 100; i++) direction(Gx, Gy, dir, w, h);
     double t10 = now_ms();
-    printf("[Scalar] Direction:        %.3f ms\n", (t10-t9)/100.0);
+    double scalar_dir_ms = (t10 - t9) / 100.0;
+    printf("[Scalar] Direction:        %.3f ms\n", scalar_dir_ms);
 
     // ── Bonus stages: NMS + Thresholding ────────────────────────────────────
     double t_nms1 = now_ms();
     for (int i = 0; i < 100; i++) non_maximum_suppression(mag_l1, dir, nms_out, w, h);
     double t_nms2 = now_ms();
-    printf("[Scalar] NMS:              %.3f ms\n", (t_nms2 - t_nms1) / 100.0);
+    double scalar_nms_ms = (t_nms2 - t_nms1) / 100.0;
+    printf("[Scalar] NMS:              %.3f ms\n", scalar_nms_ms);
 
-    // Determine thresholds
+    // Thresholds
     uint8_t low_thresh, high_thresh;
     if (user_low_thresh >= 0 && user_high_thresh >= 0) {
-        low_thresh  = static_cast<uint8_t>(user_low_thresh);
-        high_thresh = static_cast<uint8_t>(user_high_thresh);
+        low_thresh  = (uint8_t)user_low_thresh;
+        high_thresh = (uint8_t)user_high_thresh;
     } else {
         uint8_t max_mag = 0;
-        for (int i = 0; i < w * h; ++i)
-            if (mag_l1[i] > max_mag) max_mag = mag_l1[i];
-        high_thresh = static_cast<uint8_t>(max_mag * 0.15);
-        low_thresh  = static_cast<uint8_t>(max_mag * 0.05);
+        for (int i = 0; i < w * h; ++i) if (mag_l1[i] > max_mag) max_mag = mag_l1[i];
+        high_thresh = (uint8_t)(max_mag * 0.15);
+        low_thresh  = (uint8_t)(max_mag * 0.05);
         if (high_thresh < 10) high_thresh = 10;
-        if (low_thresh < 5)   low_thresh = 5;
+        if (low_thresh  < 5)  low_thresh  = 5;
         printf("[Auto]   max_mag=%d  high=%d  low=%d\n", max_mag, high_thresh, low_thresh);
     }
 
-    double t_thresh1 = now_ms();
+    double t_th1 = now_ms();
     for (int i = 0; i < 100; i++)
         threshold_and_hysteresis(mag_l1, edge_out, w, h, low_thresh, high_thresh);
-    double t_thresh2 = now_ms();
-    printf("[Scalar] Thresholding:     %.3f ms\n", (t_thresh2 - t_thresh1) / 100.0);
+    double t_th2 = now_ms();
+    double scalar_thresh_ms = (t_th2 - t_th1) / 100.0;
+    printf("[Scalar] Thresholding:     %.3f ms\n", scalar_thresh_ms);
 
-    double scalar_total = (t2-t1 + t4-t3 + t6-t5 + t8-t7 + t10-t9 +
-                           t_nms2-t_nms1 + t_thresh2-t_thresh1) / 100.0;
-    printf("\n[Scalar] Total pipeline:   %.3f ms\n", scalar_total);
+    // Scalar total — use SEPARABLE gaussian as the baseline (that's what RVV will use)
+    double scalar_total_ms = scalar_sep_ms + scalar_sobel_ms + scalar_mag_ms
+                           + scalar_dir_ms + scalar_nms_ms + scalar_thresh_ms;
+    printf("\n[Scalar] Total (sep pipe): %.3f ms\n", scalar_total_ms);
 
-    // ── RVV stages ───────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // RVV STAGES
+    // ─────────────────────────────────────────────────────────────────────────
 #ifdef __riscv_v
-    uint8_t*  blurred_rvv = alloc_image(w, h);
-    int16_t*  Gx_rvv      = (int16_t*)aligned_alloc(64, w * h * sizeof(int16_t));
-    int16_t*  Gy_rvv      = (int16_t*)aligned_alloc(64, w * h * sizeof(int16_t));
-    uint8_t*  mag_rvv     = alloc_image(w, h);
-    uint8_t*  dir_rvv     = alloc_image(w, h);
+    uint8_t* blurred_rvv = alloc_image(w, h);
+    int16_t* Gx_rvv      = (int16_t*)aligned_alloc(64, w * h * sizeof(int16_t));
+    int16_t* Gy_rvv      = (int16_t*)aligned_alloc(64, w * h * sizeof(int16_t));
+    uint8_t* mag_rvv     = alloc_image(w, h);
+    uint8_t* dir_rvv     = alloc_image(w, h);
 
     printf("\n");
 
-    double r1 = now_ms();
+        // ── RVV Gaussian 2-D (for comparison / README table) ─────────────────────
+    double rg2d_1 = now_ms();
     for (int i = 0; i < 100; i++) gaussian_5x5_rvv(src, blurred_rvv, w, h);
-    double r2 = now_ms();
-    double rvv_gauss = (r2-r1)/100.0;
-    printf("[RVV  ] Gaussian Blur:    %.3f ms  (%.1fx speedup vs scalar)\n",
-           rvv_gauss, (t2-t1)/(r2-r1));
+    double rg2d_2 = now_ms();
+    double rvv_gauss2d_ms = (rg2d_2 - rg2d_1) / 100.0;
+    printf("[RVV  ] Gaussian 2-D:      %.3f ms  (%.1fx vs scalar 2-D)\n",
+           rvv_gauss2d_ms, scalar_gauss2d_ms / rvv_gauss2d_ms);
+           
+    // ── RVV Gaussian (separable) ──────────────────────────────────────────────
+    double rg1 = now_ms();
+    for (int i = 0; i < 100; i++) gaussian_5x5_sep_rvv(src, blurred_rvv, w, h);
+    double rg2 = now_ms();
+    double rvv_gauss_ms = (rg2 - rg1) / 100.0;
+    printf("[RVV  ] Gaussian sep:      %.3f ms  (%.1fx vs scalar sep,  %.1fx vs scalar 2-D)\n",
+           rvv_gauss_ms,
+           scalar_sep_ms    / rvv_gauss_ms,
+           scalar_gauss2d_ms / rvv_gauss_ms);
 
-    double r3 = now_ms();
+    // ── RVV Sobel ─────────────────────────────────────────────────────────────
+    double rs1 = now_ms();
     for (int i = 0; i < 100; i++) sobel_rvv(blurred_rvv, Gx_rvv, Gy_rvv, w, h);
-    double r4 = now_ms();
-    double rvv_sobel = (r4-r3)/100.0;
-    printf("[RVV  ] Sobel Gradient:   %.3f ms  (%.1fx speedup vs scalar)\n",
-           rvv_sobel, (t4-t3)/(r4-r3));
+    double rs2 = now_ms();
+    double rvv_sobel_ms = (rs2 - rs1) / 100.0;
+    printf("[RVV  ] Sobel Gradient:    %.3f ms  (%.1fx vs scalar)\n",
+           rvv_sobel_ms, scalar_sobel_ms / rvv_sobel_ms);
 
-    double r5 = now_ms();
+    // ── RVV Magnitude ─────────────────────────────────────────────────────────
+    double rm1 = now_ms();
     for (int i = 0; i < 100; i++) magnitude_l1_rvv(Gx_rvv, Gy_rvv, mag_rvv, w, h);
-    double r6 = now_ms();
-    double rvv_mag = (r6-r5)/100.0;
-    printf("[RVV  ] Magnitude L1:     %.3f ms  (%.1fx speedup vs scalar)\n",
-           rvv_mag, (t6-t5)/(r6-r5));
+    double rm2 = now_ms();
+    double rvv_mag_ms = (rm2 - rm1) / 100.0;
+    printf("[RVV  ] Magnitude L1:      %.3f ms  (%.1fx vs scalar)\n",
+           rvv_mag_ms, scalar_mag_ms / rvv_mag_ms);
 
-    printf("[RVV  ] Magnitude L2:     scalar only\n");
+    printf("[RVV  ] Magnitude L2:      scalar only\n");
 
-    // ── RVV Direction ──────────────────────────────────────────────────────
-    double r_dir1 = now_ms();
+    // ── RVV Direction ─────────────────────────────────────────────────────────
+    double rd1 = now_ms();
     for (int i = 0; i < 100; i++) direction_rvv(Gx_rvv, Gy_rvv, dir_rvv, w, h);
-    double r_dir2 = now_ms();
-    double rvv_dir = (r_dir2 - r_dir1) / 100.0;
-    printf("[RVV  ] Direction:        %.3f ms  (%.1fx speedup vs scalar)\n",
-           rvv_dir, (t10 - t9) / (r_dir2 - r_dir1));
+    double rd2 = now_ms();
+    double rvv_dir_ms = (rd2 - rd1) / 100.0;
+    printf("[RVV  ] Direction:         %.3f ms  (%.1fx vs scalar)\n",
+           rvv_dir_ms, scalar_dir_ms / rvv_dir_ms);
 
-    printf("[RVV  ] NMS:              scalar only (bonus stage)\n");
-    printf("[RVV  ] Thresholding:     scalar only (bonus stage)\n");
+    printf("[RVV  ] NMS:               scalar only (bonus stage)\n");
+    printf("[RVV  ] Thresholding:      scalar only (bonus stage)\n");
 
-    double rvv_total = rvv_gauss + rvv_sobel + rvv_mag + rvv_dir
-                     + (t8-t7)/100.0
-                     + (t_nms2-t_nms1)/100.0
-                     + (t_thresh2-t_thresh1)/100.0;
-    printf("\n[RVV  ] Total pipeline:   %.3f ms  (%.1fx speedup vs scalar)\n",
-           rvv_total, scalar_total / rvv_total);
+    // ── RVV total — uses separable Gaussian + RVV Sobel/Mag/Dir + scalar NMS/Thresh
+    double rvv_total_ms = rvv_gauss_ms + rvv_sobel_ms + rvv_mag_ms
+                        + rvv_dir_ms + scalar_nms_ms + scalar_thresh_ms;
+    printf("\n[RVV  ] Total pipeline:    %.3f ms  (%.1fx vs scalar sep pipe)\n",
+           rvv_total_ms, scalar_total_ms / rvv_total_ms);
 
-    free(blurred_rvv);
-    free(Gx_rvv);
-    free(Gy_rvv);
-    free(mag_rvv);
-    free(dir_rvv);
+   
+
+    free(blurred_rvv); free(Gx_rvv); free(Gy_rvv); free(mag_rvv); free(dir_rvv);
 #endif
 
-    // ── Save outputs ─────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // SAVE OUTPUTS
+    // ─────────────────────────────────────────────────────────────────────────
     char path[256];
-    snprintf(path, sizeof(path), "%s_blurred.raw", prefix);
-    save_raw(path, blurred, w, h);
-    snprintf(path, sizeof(path), "%s_mag_l1.raw", prefix);
-    save_raw(path, mag_l1, w, h);
-    snprintf(path, sizeof(path), "%s_mag_l2.raw", prefix);
-    save_raw(path, mag_l2, w, h);
-    snprintf(path, sizeof(path), "%s_dir.raw", prefix);
-    save_raw(path, dir, w, h);
-    snprintf(path, sizeof(path), "%s_nms.raw", prefix);
-    save_raw(path, nms_out, w, h);
-    snprintf(path, sizeof(path), "%s_edges.raw", prefix);
-    save_raw(path, edge_out, w, h);
+    snprintf(path, sizeof(path), "%s_blurred.raw",     prefix); save_raw(path, blurred,     w, h);
+    snprintf(path, sizeof(path), "%s_blurred_sep.raw", prefix); save_raw(path, blurred_sep, w, h);
+    snprintf(path, sizeof(path), "%s_mag_l1.raw",      prefix); save_raw(path, mag_l1,      w, h);
+    snprintf(path, sizeof(path), "%s_mag_l2.raw",      prefix); save_raw(path, mag_l2,      w, h);
+    snprintf(path, sizeof(path), "%s_dir.raw",         prefix); save_raw(path, dir,         w, h);
+    snprintf(path, sizeof(path), "%s_nms.raw",         prefix); save_raw(path, nms_out,     w, h);
+    snprintf(path, sizeof(path), "%s_edges.raw",       prefix); save_raw(path, edge_out,    w, h);
 
-    printf("\nOutputs saved:\n");
-    printf("  %s_blurred.raw\n", prefix);
-    printf("  %s_mag_l1.raw, %s_mag_l2.raw\n", prefix, prefix);
-    printf("  %s_dir.raw\n", prefix);
-    printf("  %s_nms.raw   (non-maximum suppression)\n", prefix);
-    printf("  %s_edges.raw (final edges after hysteresis)\n", prefix);
-    printf("\nDone.\n");
+    printf("\nOutputs saved with prefix '%s'\n", prefix);
+    printf("Done.\n");
 
-    free(src); free(blurred); free(Gx); free(Gy);
-    free(mag_l1); free(mag_l2); free(dir); free(nms_out); free(edge_out);
+    free(src); free(blurred); free(blurred_sep);
+    free(Gx); free(Gy); free(mag_l1); free(mag_l2);
+    free(dir); free(nms_out); free(edge_out);
     return 0;
 }

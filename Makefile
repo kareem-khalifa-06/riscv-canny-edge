@@ -6,8 +6,10 @@ HOST_CXX    := g++
 RV_CXX      := riscv64-unknown-linux-gnu-g++
 
 HOST_FLAGS  := -O2 -std=c++17 -Wall -Wextra
-RV_FLAGS    := -march=rv64gcv -O2 -std=c++17 -Wall -Wextra -static
-
+RV_FLAGS    := -march=rv64gcv -O2 -std=c++17 -Wall -Wextra -static -fno-tree-vectorize -fno-tree-slp-vectorize
+# Disable GCC auto-vectorization.
+# GCC generated pathological code for the scalar Gaussian kernel when
+# targeting rv64gcv. These flags provide stable and reproducible profiling.
 SRC_DIR     := src
 RVV_DIR     := rvv
 TEST_DIR    := tests
